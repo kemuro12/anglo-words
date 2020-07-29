@@ -1,0 +1,11 @@
+.link{
+    width:auto;
+    margin:0 15px;
+    padding: 0 15px 8px 15px;
+    white-space: nowrap;
+}
+
+.link:hover{
+    background:rgb(0,93,185);
+    cursor: pointer;
+}
