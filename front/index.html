@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <button>Send</button>
+    <div class="response">
+
+    </div>
+
+
+<script>
+    let but = document.querySelector("button");
+    but.onclick = () => {
+        fetch("http://localhost:4040/",{
+            credentials: 'include'
+        })
+        .then(res => res.text())
+        .then(data => document.querySelector(".response").innerHTML = data);
+    }
+</script>
+
+</body>
+</html>
