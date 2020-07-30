@@ -1,0 +1,16 @@
+.vocBlock{
+    width:auto;
+}
+.rightBlock{
+    display:flex;
+
+}
+.wordsCount span{
+    line-height: 50px;
+    padding-right:7px;
+}
+
+.editForm{
+    display:flex;
+    margin-left:-5px;
+}

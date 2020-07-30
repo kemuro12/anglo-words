@@ -3,18 +3,24 @@ const app = express();
 const mysql = require('mysql');
 const cookieParser = require('cookie-parser');
 app.use(cookieParser('secret key'));
-const connection = mysql.createConnection({
+const connectionOptions = {
     host : "localhost",
     user : "mysql",
     password : "mysql",
     database : "anglo-words"
-})
+}
+const connectMysql = (options) => mysql.createConnection(options);
+const connection = connectMysql(connectionOptions);
+
 
 const crypto = require('crypto');
 app.use(express.json());
 
 const createResponse = (res, statusCode, message = "", data = {}) => {
-    res.status(statusCode);
+	res.header("Access-Control-Allow-Origin","http://localhost:3000");
+    res.header("Access-Control-Allow-Credentials","true");
+	res.header("Access-Control-Allow-Headers","Content-Type");
+    res.header("Access-Control-Allow-Methods","GET, POST, PUT, DELETE, OPTIONS");
     return {
         statusCode,
         message,
@@ -22,6 +28,11 @@ const createResponse = (res, statusCode, message = "", data = {}) => {
     }
 }
 
+
+app.options('*', (req, res) => {
+	createResponse(res, 200)
+	res.send();
+});
 
 /* AUTH API */
 app.get('/auth/me', (req, res) => {
@@ -210,34 +221,43 @@ app.get('/vocabulary/words/:id', (req, res) => {
 })
 
 app.post('/vocabulary/create', (req, res) => {
-    connection.query(`INSERT INTO vocabulary (id, title, description, ownerId, isPrivate, wordsCount)
-    VALUES (NULL, '${req.body.title}', '${req.body.description}', '${req.body.ownerId}', '${req.body.isPrivate}', 0)`,(err, result)=>{
-        if(err){
-            res.send(createResponse(res, 500, "server error"));
-            return;
-        } 
-
-        if(result.affectedRows){
-            res.send(createResponse(res, 200, "Voc was created with id = "+result.insertId));
-            return;
-        }
+    try{
+        connection.query(`INSERT INTO vocabulary (id, title, description, ownerId, isPrivate, wordsCount)
+        VALUES (NULL, '${req.body.title}', '${req.body.description}', '${req.body.ownerId}', '${req.body.isPrivate}', 0)`,(err, result)=>{
+            if(result.affectedRows){
+                connection.query(`SELECT * FROM users WHERE userId='${req.body.ownerId}'`,(err1, result1)=>{
+                    let newVocs = result1[0].vocs + "," + result.insertId; 
+                    connection.query(`UPDATE users SET vocs='${newVocs}' WHERE userId='${req.body.ownerId}'`,(err2, result2)=>{
+                        res.send(createResponse(res, 200, "Voc was created with id = "+result.insertId));
+                        return;
+                    })
+                })
+            }
+        })
+    }catch(e){
         res.send(createResponse(res, 401, "Some error"));
-    })
+    }
+    
 })
 
 app.delete('/vocabulary/delete/:id', (req, res) => {
-    connection.query(`DELETE FROM vocabulary WHERE id='${req.params.id}'`,(err, result)=>{
-        if(err){
-            res.send(createResponse(res, 500, "server error"));
-            return;
-        } 
-
-        if(result.affectedRows){
-            res.send(createResponse(res, 200, "Voc was deleted with id = " + req.params.id));
-            return;
-        }
+    try{
+        connection.query(`SELECT * FROM users WHERE bearer_token='${req.cookies.bearer_token}'`,(err, result)=>{
+            if(result.length === 0){
+                res.send(createResponse(res, 401, "Unathorized"));
+                return
+            }
+            let newVocs = result[0].vocs.replace(","+req.params.id, "");
+            connection.query(`DELETE FROM vocabulary WHERE id='${req.params.id}'`,(err1, result1)=>{
+                connection.query(`UPDATE users SET vocs='${newVocs}' WHERE userId='${result[0].userId}'`,(err2, result2)=>{
+                    res.send(createResponse(res, 200, "Voc was deleted with id = " + req.params.id));
+                    return;
+                })
+            })
+        });
+    }catch(e){
         res.send(createResponse(res, 401, "Some error"));
-    })
+    }  
 })
 
 app.put('/vocabulary/update/:id', (req, res) => {

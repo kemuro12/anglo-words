@@ -4,8 +4,8 @@ import styles from './NavItem.module.css';
 
 const NavItem = (props) => {
     return (
-        <NavLink to={props.path}>
-            <div className={styles.link}>
+        <NavLink to={props.path} onClick={ props.onClick }>
+            <div className={styles.link + " " + (props.path === props.currentPath ? styles.currentPath : "")}>
                 {props.title}
             </div>  
         </NavLink> 

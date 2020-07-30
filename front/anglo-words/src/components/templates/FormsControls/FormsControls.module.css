@@ -1,3 +1,10 @@
 .error{
     color:red;
 }
+
+form{
+    margin-left:10px;
+}
+.formSummaryError{
+    color:red;
+}

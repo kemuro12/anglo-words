@@ -1,14 +1,23 @@
+import { authAPI } from "../api/api";
+import { stopSubmit } from "redux-form";
+import { toggleSnackbar } from "./snackbar-reducer";
+
 const SET_USER_DATA = "auth/SET_USER_DATA"
 
 let initialState = {
-    userId: null
+    userId: null,
+    login: null,
+    userVocs: null,
+    image: null,
+    isAuth: false
 }
 
 const authReducer = (state = initialState, action) => {
     switch(action.type){
         case SET_USER_DATA: {
             return {
-                ...state
+                ...state,
+                ...action.payload
             }
         }
         default:
@@ -16,23 +25,51 @@ const authReducer = (state = initialState, action) => {
     }
 }
 
-export const setUserData = (userId, login, vocs, isAuth) => {
+export const setUserData = (userId, login, userVocs, image, isAuth) => {
     return {
         type: SET_USER_DATA,
         payload: {
             userId,
             login,
-            vocs,
+            userVocs,
+            image,
             isAuth
         }
     }
 }
 
 // THUNKS
-export const login = (login, pass, rememberMe) => {
-    console.log(login, pass, rememberMe)
+export const authMe = () => {
     return async (dispatch) => {
-        return 20;
+        let response = await authAPI.authMe();
+        if(response.data.statusCode === 201){
+            let user = response.data.data;
+            dispatch(setUserData(user.userId, user.login, user.vocs, user.image, true))
+        }
+    }
+}
+
+export const login = (login, pass, rememberMe = false) => {
+    return async (dispatch) => {
+        let response = await authAPI.login(login, pass, rememberMe);
+        if(response.data.statusCode === 201){
+            dispatch(authMe())
+            dispatch(toggleSnackbar(true, "success" ,"Авторизация прошла успешно!"))
+        }else{
+            let message = response.data.message.length > 0 ? response.data.message : "some error"
+            dispatch(stopSubmit("login", {_error: message}))
+        }
+    }
+}
+
+export const logout = () => {
+    return async (dispatch) => {
+        let response = await authAPI.logout();
+        if(response.data.statusCode === 201){
+            dispatch(authMe())
+            dispatch(setUserData(null, null, null, null, false))
+            dispatch(toggleSnackbar(true, "info" ,"Вы успешно вышли из системы!"))
+        }
     }
 }
 

@@ -9,3 +9,8 @@
     background:rgb(0,93,185);
     cursor: pointer;
 }
+
+.currentPath{
+    font-weight: 500;
+    background:rgb(0,93,185);
+}
