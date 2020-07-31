@@ -1,5 +1,6 @@
 import { vocsAPI } from "../api/api";
 import { authMe } from "./auth-reducer";
+import { toggleSnackbar } from "./snackbar-reducer";
 
 const SET_VOCS = "voc/SET_VOCS";
 const SET_VOC = "voc/SET_VOC";
@@ -20,7 +21,7 @@ const vocReducer = (state = initialState, action) => {
             return {
                 ...state,
                 vocs: state.vocs.map(voc => {
-                    if(voc.id != action.voc.id) return voc
+                    if(voc.id !== action.voc.id) return voc
                     else {
                         return {
                             ...voc,
@@ -63,6 +64,7 @@ export const addNewVoc = (title, description, isPrivate, user) => {
     return async (dispatch) => {
         let response1 = await vocsAPI.createVoc(title, description, user.userId, isPrivate ? 1 : 0);
         if(response1.data.statusCode === 200){
+            dispatch(toggleSnackbar(true, "success" ,"Словарь Создан!"))
             dispatch(authMe())
         }
     }
@@ -72,20 +74,24 @@ export const deleteVoc = (vocId) => {
     return async (dispatch) => {
         let response = await vocsAPI.deleteVoc(vocId);
         if(response.data.statusCode === 200 ){
+            dispatch(toggleSnackbar(true, "success" ,"Словарь Удален!"))
             dispatch(authMe())
         }
     }
 }
 
-export const updateVoc = (vocId, title, description, isPrivate) => {
+export const updateVoc = (vocId, title, description, isPrivate, wordsCount) => {
     return async (dispatch) => {
-        let response = await vocsAPI.updateVoc(vocId, title, description, isPrivate);
+        let response = await vocsAPI.updateVoc(vocId, title, description, isPrivate, wordsCount);
         if(response.data.statusCode === 201){
             let voc = {
                 id: vocId,
-                title
+                title,
+                isPrivate,
+                wordsCount
             }
             dispatch(setVoc(voc));
+            dispatch(toggleSnackbar(true, "warning" ,"Словарь Обновлен!"))
         }
     }
 }

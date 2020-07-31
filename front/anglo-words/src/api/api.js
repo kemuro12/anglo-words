@@ -61,7 +61,21 @@ export const vocsAPI = {
         return instance.delete(`/vocabulary/delete/${vocId}`) 
     },
 
-    updateVoc(vocId, title, description, isPrivate){
-        return instance.put(`/vocabulary/update/${vocId}`, {title, description, isPrivate})
+    updateVoc(vocId, title, description, isPrivate, wordsCount){
+        return instance.put(`/vocabulary/update/${vocId}`, {title, description, isPrivate, wordsCount})
+    }
+}
+
+export const wordsAPI = {
+    createWord(voc_id, word_eng, word_ru){
+        return instance.post(`/words/create`, {voc_id, word_eng, word_ru}) 
+    },
+
+    updateWord(wordId, word_eng, word_ru){
+        return instance.put(`/words/update/${wordId}`, {word_eng, word_ru})
+    },
+
+    deleteWord(wordId){
+        return instance.delete(`/words/delete/${wordId}`) 
     }
 }

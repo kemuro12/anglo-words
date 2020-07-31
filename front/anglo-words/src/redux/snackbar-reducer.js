@@ -39,11 +39,4 @@ export const toggleSnackbar = (snackbar, snackbarType = "success" , snackbarMess
 
 /* THUNKS */
 
-export const offSnackbar = () => {
-    return (dispatch) => {
-        dispatch(toggleSnackbar(false))
-    }
-}
-
-
 export default snackbarReducer;

@@ -2,15 +2,16 @@ import React from 'react';
 import { Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import { connect } from 'react-redux';
-import { offSnackbar } from '../../redux/snackbar-reducer';
+import { toggleSnackbar } from '../../redux/snackbar-reducer';
 
 const SnackbarContainer = (props) => {
+    
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
     
-        props.offSnackbar();
+        props.toggleSnackbar(false);
     };
 
 
@@ -39,4 +40,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, { offSnackbar })(SnackbarContainer);
+export default connect(mapStateToProps, { toggleSnackbar })(SnackbarContainer);

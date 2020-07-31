@@ -30,3 +30,19 @@ nav{
     margin-left:10%;
     justify-content:space-between;
 }
+
+.avatar {
+    width:50px !important;
+    height: auto !important;
+    margin:5px 10px;
+}
+.avatar:hover{
+    cursor: pointer;
+}
+.avatarMenu{
+    margin-top:30px;
+}
+.logoutButton{
+    color:red;
+    cursor: pointer;
+}

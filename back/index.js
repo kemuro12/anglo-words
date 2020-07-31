@@ -216,7 +216,12 @@ app.get('/vocabulary/words/:id', (req, res) => {
             res.send(createResponse(res, 200, "ok", result));
             return;
         }
-        res.send(createResponse(res, 401, "Dont have words of vocabulary with id = "+req.params.id));
+        if(result.length === 0){
+            res.send(createResponse(res, 200, "ok", []));
+            return;
+        }
+        
+        res.send(createResponse(res, 401, "Some error"));
     })
 })
 
@@ -250,8 +255,10 @@ app.delete('/vocabulary/delete/:id', (req, res) => {
             let newVocs = result[0].vocs.replace(","+req.params.id, "");
             connection.query(`DELETE FROM vocabulary WHERE id='${req.params.id}'`,(err1, result1)=>{
                 connection.query(`UPDATE users SET vocs='${newVocs}' WHERE userId='${result[0].userId}'`,(err2, result2)=>{
-                    res.send(createResponse(res, 200, "Voc was deleted with id = " + req.params.id));
-                    return;
+                    connection.query(`DELETE FROM words WHERE voc_id='${req.params.id}'`,(err3, result3)=>{
+                        res.send(createResponse(res, 200, "Voc was deleted with id = " + req.params.id));
+                        return;
+                    })  
                 })
             })
         });
@@ -289,7 +296,7 @@ app.post('/words/create', (req, res) => {
         } 
 
         if(result.affectedRows){
-            res.send(createResponse(res, 200, "word was created with id = "+result.insertId));
+            res.send(createResponse(res, 200, "word was created with id = "+result.insertId, {wordId: result.insertId}));
             return;
         }
         res.send(createResponse(res, 401, "Some error"));
@@ -313,6 +320,7 @@ app.put('/words/update/:id', (req, res) => {
 })
 
 app.delete('/words/delete/:id', (req, res) => {
+    console.log(req.params.id)
     connection.query(`DELETE FROM words WHERE id='${req.params.id}'`,(err, result)=>{
         if(err){
             res.send(createResponse(res, 500, "server error"));

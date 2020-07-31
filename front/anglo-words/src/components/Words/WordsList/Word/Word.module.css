@@ -1,0 +1,9 @@
+.rightBlock{
+    display:flex;
+}
+.wordRu{
+    line-height: 52px !important;
+}
+.editForm{
+    display: flex;
+}

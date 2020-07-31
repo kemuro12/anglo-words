@@ -3,6 +3,7 @@ import Vocabulary from './Vocabulary';
 import { connect } from 'react-redux';
 import { getVocsByUserId, addNewVoc, deleteVoc, updateVoc } from '../../redux/voc-reducer';
 import { compose } from 'redux';
+import { toggleModal } from '../../redux/modal-reducer';
 
 const VocabularyContainer = (props) => {
     useEffect(() => {
@@ -12,11 +13,7 @@ const VocabularyContainer = (props) => {
     return (
         <Vocabulary 
             user={props.user} 
-            vocs={props.vocs} 
-            history={props.history} 
             addNewVoc={props.addNewVoc} 
-            deleteVoc={props.deleteVoc} 
-            updateVoc={props.updateVoc}
         />
     )
 }
@@ -33,5 +30,5 @@ const mapStateToProps = (state) => {
 }
 
 export default compose(
-    connect(mapStateToProps, { getVocsByUserId, addNewVoc, deleteVoc, updateVoc })
+    connect(mapStateToProps, { getVocsByUserId, addNewVoc, deleteVoc, updateVoc, toggleModal })
 )(VocabularyContainer);

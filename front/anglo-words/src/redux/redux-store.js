@@ -6,13 +6,17 @@ import appReducer from './app-reducer';
 import snackbarReducer from './snackbar-reducer';
 import vocReducer from './voc-reducer';
 import usersReducer from './users-reducer';
+import modalReducer from './modal-reducer';
+import wordsReducer from './words-reducer';
 
 let reducers = combineReducers({
     auth: authReducer,
     app: appReducer,
     snackbar: snackbarReducer,
+    modal: modalReducer,
     vocabulary: vocReducer,
     users: usersReducer,
+    words: wordsReducer,
     form: formReducer
 });
 
