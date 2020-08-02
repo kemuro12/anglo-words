@@ -53,6 +53,10 @@ export const vocsAPI = {
         return instance.get(`/vocabulary/words/${vocId}`)
     },
 
+    getWordsByVocsIds(vocIds){
+        return instance.get(`/vocabulary/words?${"voc_id=" + vocIds.join("&voc_id=")}`)
+    },
+
     createVoc(title, description, ownerId, isPrivate){
         return instance.post(`/vocabulary/create`, {title, description, ownerId, isPrivate})
     },

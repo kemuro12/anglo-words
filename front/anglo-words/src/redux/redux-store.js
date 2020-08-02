@@ -8,6 +8,7 @@ import vocReducer from './voc-reducer';
 import usersReducer from './users-reducer';
 import modalReducer from './modal-reducer';
 import wordsReducer from './words-reducer';
+import gamesReducer from './games-reducer';
 
 let reducers = combineReducers({
     auth: authReducer,
@@ -17,6 +18,7 @@ let reducers = combineReducers({
     vocabulary: vocReducer,
     users: usersReducer,
     words: wordsReducer,
+    games: gamesReducer,
     form: formReducer
 });
 

@@ -1,0 +1,37 @@
+.main{
+    display:flex;
+    justify-content:space-between;
+    padding:0 30px;
+}
+
+.gamesBlock{
+    width:49.5%;
+    margin-top:10px;
+}
+
+.headerBlock{
+    text-align: center;
+    padding:10px 0;
+}
+
+.buttonContainer{
+    text-align: center;
+    margin-top:6px;
+}
+
+.disabledButton{
+    color:white !important;
+    background:grey !important;
+    width:60%;
+    max-width: 300px;
+    min-width: auto;
+    
+}
+
+.buttonStart{
+    color:white !important;
+    background:rgb(67,160,71) !important;
+    width:60%;
+    max-width: 300px;
+    min-width: auto;
+}

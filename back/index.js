@@ -9,8 +9,20 @@ const connectionOptions = {
     password : "mysql",
     database : "anglo-words"
 }
-const connectMysql = (options) => mysql.createConnection(options);
-const connection = connectMysql(connectionOptions);
+
+let connection = null;
+
+function connect(callback=null){
+    console.log("MYSQL TAKE CONNECT");
+    connection=mysql.createConnection(connectionOptions);
+    connection.on('error', function(err) {
+      console.log("---" +err.message);
+      console.log("---" +err.code);
+    });
+  if(callback)setTimeout(callback,100);
+}
+
+connect();
 
 
 const crypto = require('crypto');
@@ -222,6 +234,22 @@ app.get('/vocabulary/words/:id', (req, res) => {
         }
         
         res.send(createResponse(res, 401, "Some error"));
+    })
+})
+
+app.get('/vocabulary/words',(req, res) => {
+    if(!req.query.voc_id) res.send(createResponse(res, 401, "Some error"));
+    let mas = [];
+    if(typeof(req.query.voc_id) === typeof("H")) mas = req.query.voc_id;
+    else mas = req.query.voc_id.join(",");
+    connection.query(`SELECT * FROM words WHERE voc_id IN(${mas})`,(err, result)=>{
+        if(err){
+            res.send(createResponse(res, 500, "server error"));
+            return;
+        } 
+  
+        res.send(createResponse(res, 200, "ok", result));
+        return;
     })
 })
 

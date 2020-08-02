@@ -1,0 +1,14 @@
+@media (max-width:960px){
+    .gameBlock{
+        margin-right:20px !important;
+    }  
+}
+
+.true, .true td{
+    background:rgb(81,193,87);
+    color:white;
+}
+.false, .false td{
+    background:rgb(244,67,54);
+    color:white;
+}

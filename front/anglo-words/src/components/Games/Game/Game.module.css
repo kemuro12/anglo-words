@@ -1,0 +1,24 @@
+.gameBlock{
+    padding:20px 15px;
+}
+.block{
+    padding:15px;
+}
+.questBlock{
+    display:flex;
+    height: 400px;
+    padding:15px;
+}
+.input{
+    width:160px;
+    margin:0 10px;
+}
+.input input{
+    text-align: center;
+    font-size:23px;
+}
+
+.buttonStart{
+    color:white !important;
+    background:rgb(67,160,71) !important;
+}

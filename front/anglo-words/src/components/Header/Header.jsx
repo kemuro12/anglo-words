@@ -25,6 +25,7 @@ const Header = (props) => {
                 <nav>
                     <NavItem path="/" title="Главная" currentPath={props.currentPath}/>
                     <NavItem path="/vocabulary" title="Мои словари" currentPath={props.currentPath}/>
+                    <NavItem path="/games" title="Тренироваться" currentPath={props.currentPath}/>
                 </nav>
                 
                 {!props.isAuth ? 
