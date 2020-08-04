@@ -6,16 +6,15 @@ import { requiredField } from '../../../utils/validators/validators';
 import { reduxForm, Field } from 'redux-form';
 import TableResult from './TableResult/TableResult';
 
-const questForm = React.memo((props) => {
+const questForm = (props) => {
     return (
         <form onSubmit={props.handleSubmit} className={styles.questBlock}>
             <div >
                 <Field 
-                    name="eng"
+                    name="main"
                     size="small"
                     disabled
                     className={styles.input}
-                    autoFocus={true}
                     component={Input}  
                 />
             </div>
@@ -26,44 +25,51 @@ const questForm = React.memo((props) => {
 
             <div >
                 <Field 
-                    name="ru"
+                    name="inputed"
                     size="small"
-                    value="pizda"
                     className={styles.input}
+                    autoComplete="off"
+                    autoFocus
+                    onKeyDown={ (e) => e.keyCode === 13 && props.submit() }
                     component={Input}
                     validate={[requiredField]}
                 />
             </div>
-
             <div>
                 <Button onClick={ props.submit } className={styles.buttonStart} variant="contained" size="small" color="primary">Ок</Button>
             </div>
         </form>
     )
-})
+}
 
 const QuestInputReduxForm = reduxForm({
     form: "questInputForm",
     enableReinitialize: true
 })(questForm)
 
-const Game = (props) => {
-
+const Game = React.memo((props) => {
+ 
+    const [openForm, setOpenForm] = useState(true);
     const [currentWord, setCurrentWord] = useState(0);
 
     const words = props.words;
 
     const onAnswerQuestion = (formData) => {
         words[currentWord].correct = 
-        formData.ru === words[currentWord].word_ru 
+        formData.inputed === words[currentWord].answer 
         ? true : false;
 
-        words[currentWord].displayed_eng = formData.eng;
-        words[currentWord].displayed_ru = formData.ru;
+        words[currentWord].inputed = formData.inputed;
+
         setCurrentWord(currentWord + 1);
+
+        new Promise ((resolve, reject) => {
+            resolve(setOpenForm(false))
+        }).then(() => setOpenForm(true))
+        
     }
     
-    if(words.length === currentWord) return <TableResult words={words} />
+    if(words.length === currentWord) return <TableResult words={words} clearGame={props.clearGame} />
 
     return (
         <div className={styles.gameBlock}>
@@ -73,11 +79,11 @@ const Game = (props) => {
                     Вопрос №{currentWord + 1}
                 </Typography>
 
-                <QuestInputReduxForm initialValues={{eng: words[currentWord].displayed_eng, ru: words[currentWord].displayed_ru}} onSubmit={ onAnswerQuestion } />
+                { openForm && <QuestInputReduxForm initialValues={{main: words[currentWord].main, inputed: words[currentWord].inputed}} onSubmit={ onAnswerQuestion } />}
    
             </Card>          
         </div>
     )
-}
+})
 
 export default Game;

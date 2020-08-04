@@ -6,6 +6,7 @@ import { Field, reduxForm } from 'redux-form';
 import { requiredField } from '../../utils/validators/validators';
 import { Input, CheckBox } from '../templates/FormsControls/FormsControls';
 import VocsListContainer from './VocsList/VocsListContainer';
+import Preloader from '../templates/Preloader/Preloader';
 
 const addVocForm = (props) => {
 
@@ -20,7 +21,8 @@ const addVocForm = (props) => {
                     label="Название"
                     name="title"
                     variant="filled"
-                    autoFocus={true}
+                    autoComplete="off"
+                    autoFocus
                     component={Input}
                     validate={[requiredField]}
                 />
@@ -31,6 +33,7 @@ const addVocForm = (props) => {
                     label="Описание"
                     name="description"
                     variant="filled"
+                    autoComplete="off"
                     component={Input}
                     validate={[requiredField]}
                 />
@@ -82,7 +85,12 @@ const Vocabulary = (props) => {
                 </AccordionDetails>
             </Accordion>
             
+            {props.isLoading ? 
+            <Preloader  />
+                :
             <VocsListContainer />
+            }
+            
               
         </div>
     )

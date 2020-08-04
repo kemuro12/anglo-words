@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Route } from 'react-router-dom';
 import Login from './components/Login/Login';
 import HeaderContainer from './components/Header/HeaderContainer';
@@ -11,6 +11,7 @@ import { compose } from 'redux';
 import { withWidth } from '@material-ui/core';
 import WordsContainer from './components/Words/WordsContainer';
 import GamesContainer from './components/Games/GamesContainer';
+import Preloader from './components/templates/Preloader/Preloader';
 
 
 function App(props) {
@@ -20,7 +21,7 @@ function App(props) {
   },[props.initialized])
 
   if(!props.initialized){
-    return <div>loading</div>
+    return <Preloader />
   }
   
   return (

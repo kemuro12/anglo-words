@@ -1,6 +1,6 @@
 import { authAPI } from "../api/api";
-import { stopSubmit } from "redux-form";
 import { toggleSnackbar } from "./snackbar-reducer";
+import { stopSubmit } from "redux-form";
 
 const SET_USER_DATA = "auth/SET_USER_DATA"
 
@@ -55,7 +55,7 @@ export const login = (login, pass, rememberMe = false) => {
         if(response.data.statusCode === 201){
             dispatch(authMe())
             dispatch(toggleSnackbar(true, "success" ,"Авторизация прошла успешно!"))
-        }else{
+        }else {
             let message = response.data.message.length > 0 ? response.data.message : "some error"
             dispatch(stopSubmit("login", {_error: message}))
         }

@@ -19,7 +19,7 @@ function connect(callback=null){
       console.log("---" +err.message);
       console.log("---" +err.code);
     });
-  if(callback)setTimeout(callback,100);
+
 }
 
 connect();

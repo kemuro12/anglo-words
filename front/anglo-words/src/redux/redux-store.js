@@ -1,5 +1,5 @@
 import { combineReducers, createStore, applyMiddleware } from 'redux';
-import {reducer as formReducer} from 'redux-form';
+import {reducer as formReducer } from 'redux-form';
 import thunkMiddleware from 'redux-thunk';
 import authReducer from './auth-reducer';
 import appReducer from './app-reducer';
@@ -9,6 +9,7 @@ import usersReducer from './users-reducer';
 import modalReducer from './modal-reducer';
 import wordsReducer from './words-reducer';
 import gamesReducer from './games-reducer';
+import preloaderReducer from './preloader-reducer';
 
 let reducers = combineReducers({
     auth: authReducer,
@@ -19,6 +20,7 @@ let reducers = combineReducers({
     users: usersReducer,
     words: wordsReducer,
     games: gamesReducer,
+    preloader: preloaderReducer,
     form: formReducer
 });
 

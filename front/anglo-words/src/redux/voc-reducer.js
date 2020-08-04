@@ -1,6 +1,7 @@
 import { vocsAPI } from "../api/api";
 import { authMe } from "./auth-reducer";
 import { toggleSnackbar } from "./snackbar-reducer";
+import { toggleIsLoading } from "./preloader-reducer";
 
 const SET_VOCS = "voc/SET_VOCS";
 const SET_VOC = "voc/SET_VOC";
@@ -53,8 +54,10 @@ export const setVocs = (vocs) => {
 /* THUNKS */
 export const getVocsByUserId = (userId) => {
     return async (dispatch) => {
+        dispatch(toggleIsLoading())
         let response = await vocsAPI.getVocsByUserId(userId);
         if(response.data.statusCode === 200){
+            dispatch(toggleIsLoading())
             dispatch(setVocs(response.data.data));
         }
     }

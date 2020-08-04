@@ -9,8 +9,9 @@ const VocsList = (props) => {
     const history = useHistory();
 
     const handleListItemClick = (vocId) => {
-        return () => {
-            history.push('/vocabulary/' + vocId);
+        
+        return (e) => {
+            if(e.target.tagName !== "INPUT" && e.target.innerText !== "ОК") history.push('/vocabulary/' + vocId);
         }
     }
 
@@ -52,7 +53,8 @@ const VocsList = (props) => {
 
     const handleOnSubmitEditForm = () => {
         return (formData) => {
-            props.updateVoc(editVoc, formData.title, props.vocs.find(voc => voc.id === 49).description, formData.isPrivate ? 1 : 0)
+            let currentVoc = props.vocs.find(voc => voc.id === editVoc);
+            props.updateVoc(editVoc, formData.title, currentVoc.description, formData.isPrivate ? 1 : 0, currentVoc.wordsCount)
             setEditVoc(0);
         }
     }

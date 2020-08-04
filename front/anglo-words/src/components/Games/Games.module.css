@@ -1,12 +1,16 @@
 .main{
-    display:flex;
-    justify-content:space-between;
-    padding:0 30px;
+    margin-top:1px !important;
+    height: auto;
 }
-
-.gamesBlock{
-    width:49.5%;
-    margin-top:10px;
+.fullWidth{
+    height: 100% !important;
+}
+.radio{
+    color:rgb(67,160,71) !important;
+}
+.typText {
+    line-height: 46px !important;
+    padding:0px 8px;
 }
 
 .headerBlock{
@@ -16,7 +20,7 @@
 
 .buttonContainer{
     text-align: center;
-    margin-top:6px;
+    padding: 10px 0;
 }
 
 .disabledButton{

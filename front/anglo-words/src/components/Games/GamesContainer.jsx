@@ -2,13 +2,16 @@ import React, { useEffect } from 'react';
 import Games from './Games';
 import { connect } from 'react-redux';
 import { getVocsByUserId } from '../../redux/voc-reducer';
-import { initializeGame } from '../../redux/games-reducer';
+import { initializeGame, clearGame } from '../../redux/games-reducer';
 
 const GamesContainer = (props) => {
 
     useEffect(() => {
         if(props.vocs.length !== props.user.userVocs.split(",").length) props.getVocsByUserId(props.user.userId) 
     }, [props.user.userVocs])
+
+    //willUnMount
+    useEffect(() => () => props.clearGame(), [])
 
     return (
         <Games 
@@ -17,6 +20,8 @@ const GamesContainer = (props) => {
             selectedGameMode={props.selectedGameMode}
             initializeGame={props.initializeGame}
             words={props.words}
+            clearGame={props.clearGame}
+            vocs={props.vocs}
         />
     )
 }
@@ -31,8 +36,8 @@ const mapStateToProps = (state) => {
         selectedGameMode: state.games.selectedGameMode,
         vocs: state.vocabulary.vocs,
         selectedVocs: state.games.selectedVocs,
-        words: state.games.words
+        words: state.games.words,
     }
 }
 
-export default connect(mapStateToProps, { getVocsByUserId, initializeGame })(GamesContainer);
+export default connect(mapStateToProps, { getVocsByUserId, initializeGame, clearGame })(GamesContainer);

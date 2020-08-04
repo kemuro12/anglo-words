@@ -4,7 +4,7 @@ import ListItemWithCheckbox from '../../templates/ListItemWithCheckbox/ListItemW
 
 const GamesVocList = (props) => {
     
-    const voc_mas = props.vocs.map( (voc, count) => 
+    const voc_mas = props.vocs.map( (voc, count) => voc.wordsCount ?
         <ListItemWithCheckbox
             key={voc.id}
             num={count}
@@ -12,6 +12,7 @@ const GamesVocList = (props) => {
             item={voc}
             toggleSelectedCheckbox={ props.toggleSelectedVoc }
         />
+        : ""
     )
 
     return (

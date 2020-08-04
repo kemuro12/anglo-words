@@ -14,6 +14,7 @@ const VocabularyContainer = (props) => {
         <Vocabulary 
             user={props.user} 
             addNewVoc={props.addNewVoc} 
+            isLoading={props.isLoading}
         />
     )
 }
@@ -25,7 +26,8 @@ const mapStateToProps = (state) => {
             userVocs: state.auth.userVocs,
             image: state.auth.image
         },
-        vocs: state.vocabulary.vocs
+        vocs: state.vocabulary.vocs,
+        isLoading: state.preloader.isLoading
     }
 }
 

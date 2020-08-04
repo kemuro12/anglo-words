@@ -3,23 +3,25 @@ import { vocsAPI } from "../api/api";
 const TOGGLE_VOC = 'games/TOGGLE_VOC';
 const TOGGLE_GAMEMODE = 'games/TOGGLE_GAMEMODE';
 const SET_WORDS = 'games/SET_WORDS';
+const CLEAR_GAME = 'games/CLEAR_GAME';
 
 let initialState = {
     gameModes:[
         {id:1, title:"Словарь", rules:{
-            ru : (ru) => "",
-            eng : (eng) => eng,
+            main : (w) => w,
+            inputed : (w) => "",
             shuffle : (mas) => mas
         }},
         {id:2, title:"Словарь перемешанный", rules:{
-            ru : (ru) => "",
-            eng : (eng) => eng,
+            main : (w) => w,
+            inputed : (w) => "",
             shuffle : (mas) => mas.sort(() => Math.random() - 0.5)
         }},
-        {id:3, title:"Тест 3", rules:{
-            ru : (ru) => ru,
-            eng : (eng) => eng,
-            shuffle : (mas) => mas
+        {id:3, title:"Сплит", rules:{
+            main : (w) => w,
+            //удалить из слова рандомное клоичество символов
+            inputed : (w) => w.substr(0, Math.floor(1 + Math.random() * ((w.length - 2) + 1 - 1))),
+            shuffle : (mas) => mas.sort(() => Math.random() - 0.5)
         }}
     ],
     selectedVocs : [],
@@ -48,7 +50,16 @@ const gamesReducer = (state = initialState, action) => {
         case SET_WORDS:{
             return {
                 ...state,
-                words: action.words
+                words: action.words,
+                isGameStart: true
+            }
+        }
+        case CLEAR_GAME: {
+            return {
+                ...state,
+                selectedVocs : [],
+                selectedGameMode : 1,
+                words: []
             }
         }
         default:
@@ -77,19 +88,33 @@ export const setWords = (words) => {
     }
 }
 
+export const clearGame = () => {
+    return {
+        type: CLEAR_GAME
+    }
+}
+
 /* THUNKS */
 
-export const initializeGame = ( gameMode, selectedVocs ) => {
+export const initializeGame = ( gameMode, selectedVocs, mainLanguage ) => {
     return async (dispatch) => {
         let response = await vocsAPI.getWordsByVocsIds(selectedVocs);
         if(response.data.statusCode === 200) {
             let words = response.data.data
-            words = words.map(word => ({
-                word_eng : word.word_eng,
-                word_ru : word.word_ru,
-                displayed_eng : gameMode.rules.eng(word.word_eng),
-                displayed_ru : gameMode.rules.ru(word.word_ru)
-            }))
+            if(mainLanguage === "eng"){
+                words = words.map(word => ({
+                    main : gameMode.rules.main(word.word_eng),
+                    inputed : gameMode.rules.inputed(word.word_ru),
+                    answer : word.word_ru
+                }))
+            }else{
+                words = words.map(word => ({
+                    main : gameMode.rules.main(word.word_ru),
+                    inputed : gameMode.rules.inputed(word.word_eng),
+                    answer : word.word_eng
+                }))
+            }
+            
             words = gameMode.rules.shuffle(words);
             dispatch(setWords(words))
         }

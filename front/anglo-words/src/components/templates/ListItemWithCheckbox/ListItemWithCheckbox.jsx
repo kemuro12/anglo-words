@@ -1,12 +1,13 @@
 import React from 'react';
-import { ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, Checkbox } from '@material-ui/core';
+import styles from './ListItemWithCheckbox.module.css'
+import { ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, Checkbox, Hidden } from '@material-ui/core';
 
 const ListItemWithCheckbox = React.memo((props) => {
-    console.log("ITEM")
+    
     const item = props.item;
     
     return (
-        <ListItem divider >
+        <ListItem divider className={ props.selected ? styles.selectedItem : ""}>
             <ListItemIcon>
                 {props.num + 1}
             </ListItemIcon> 
@@ -14,11 +15,16 @@ const ListItemWithCheckbox = React.memo((props) => {
             <ListItemText primary={item.title} />
             
             <ListItemSecondaryAction > 
-                <Checkbox 
-                    style={{color:"rgb(67,160,71)"}}
-                    checked={ props.selected }
-                    onChange={() => props.toggleSelectedCheckbox(item.id) }
-                />                  
+                <div className={styles.rightBlock}>
+                    {item.wordsCount && <ListItemText className={styles.wordsCount + " " + (props.selected ? styles.selectedItem : "")} primary={item.wordsCount + "/50 слов"}  />}
+
+                    <Checkbox 
+                        className={props.selected ? styles.selectedItem : styles.greenCheckbox}
+                        checked={ props.selected }
+                        onChange={() => props.toggleSelectedCheckbox(item.id) }
+                    />    
+                </div>
+                              
             </ListItemSecondaryAction>  
         </ListItem>
     )

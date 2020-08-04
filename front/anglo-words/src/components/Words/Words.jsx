@@ -28,6 +28,7 @@ const addWordForm = (props) => {
                     label="Слово"
                     name="word_eng"
                     size="small"
+                    autoComplete="off"
                     component={Input}
                     validate={[requiredField]}
                     autoFocus={true}
@@ -39,6 +40,7 @@ const addWordForm = (props) => {
                 <Field 
                     label="Перевод"
                     name="word_ru"
+                    autoComplete="off"
                     size="small"
                     component={Input}
                     onKeyDown={ (e) => e.keyCode === 13 ? onSubmitForm() : 0 }

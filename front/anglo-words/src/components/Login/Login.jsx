@@ -15,6 +15,7 @@ const LoginForm = (props) => {
                 <Field 
                     placeholder="Логин"
                     name="login"
+                    autoComplete="off"
                     component={Input}
                     validate={[requiredField]}
                 />
@@ -24,6 +25,7 @@ const LoginForm = (props) => {
                 <Field 
                     placeholder="Пароль" 
                     name="pass" 
+                    autoComplete="off"
                     type="password" 
                     component={Input} 
                     validate={[requiredField]}

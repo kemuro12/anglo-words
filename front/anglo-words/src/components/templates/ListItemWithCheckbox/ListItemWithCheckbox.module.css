@@ -1,0 +1,30 @@
+.rightBlock{
+    display:flex;
+}
+
+.greenCheckbox{
+    color:rgb(67,160,71) !important;
+}
+
+.selectedItemCheckbox{
+    color:white !important;
+}
+
+.wordsCount span{
+    line-height: 36px;
+}
+.selectedItemSpan{
+    color:white;
+}
+.selectedItem {
+    background:rgb(67,160,71);
+    color:white;
+}
+.selectedItem > div{
+    background:rgb(67,160,71);
+    color:white !important;
+}
+.selectedItem {
+    background:rgb(67,160,71);
+    color:white !important;
+}

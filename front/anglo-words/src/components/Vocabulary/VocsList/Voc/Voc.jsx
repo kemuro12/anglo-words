@@ -15,6 +15,7 @@ const editVocForm = (props) => {
                 name="title"
                 size="small"
                 autoFocus={true}
+                autoComplete="off"
                 component={Input}
                 validate={[requiredField]}
             />

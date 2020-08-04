@@ -18,7 +18,7 @@ const VocsListContainer = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        vocs: state.vocabulary.vocs.reverse()
+        vocs: state.vocabulary.vocs.slice().reverse()
     }
 }
 
