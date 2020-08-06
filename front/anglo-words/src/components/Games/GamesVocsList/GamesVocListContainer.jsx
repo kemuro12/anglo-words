@@ -5,12 +5,6 @@ import { toggleSelectedVoc } from '../../../redux/games-reducer';
 import { getVocsByUserId } from '../../../redux/voc-reducer';
 
 const GamesVocListContainer = (props) => {
-    
-    useEffect(() => {
-        //Для запроса всех словарей
-        if(props.vocs.length <= 5) props.getVocsByUserId(props.userId, 0)
-    },[props.vocs])
-
     return (
         <GamesVocList 
             selectedVocs={props.selectedVocs}  

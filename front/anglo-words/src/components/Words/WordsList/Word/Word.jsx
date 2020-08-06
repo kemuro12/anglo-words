@@ -52,6 +52,8 @@ const EditWordReduxForm = reduxForm({
 })(editWordForm)
 
 const Word = (props) => {
+    console.log("WORD")
+
     const word = props.word;
 
     return (

@@ -5,7 +5,7 @@ import { updateVoc, deleteVoc, getVocsByUserId } from '../../../redux/voc-reduce
 import { toggleModal } from '../../../redux/modal-reducer';
 
 const VocsListContainer = (props) => {
-   
+
     return (
         <VocsList 
             vocs={props.vocs} 

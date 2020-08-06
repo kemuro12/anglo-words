@@ -60,8 +60,8 @@ const AddVocReduxForm = reduxForm({
 })(addVocForm)
 
 const Vocabulary = (props) => {
+    console.log("VOC")
     const [accordionOpen, setAccordionOpen] = useState(false);
-    console.log(props)
     
     const countOfVocs = props.pageOptions.countOfVocs;
     const pageSize = props.pageOptions.pageSize;

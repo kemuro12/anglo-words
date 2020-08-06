@@ -38,6 +38,7 @@ const EditVocReduxForm = reduxForm({
 })(editVocForm)
 
 const Voc = (props) => {
+
     const voc = props.voc;
 
     return (

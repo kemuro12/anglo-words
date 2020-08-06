@@ -7,10 +7,10 @@ import Preloader from '../templates/Preloader/Preloader';
 import Game from './Game/Game';
 
 const Games = (props) => {
-
+    console.log(props)
     const [mainLanguage, setMainLanguage] = useState("eng")
   
-    if(props.isInitializedLoading) return <Preloader size="large" />
+    if(props.isGameInitialize ) return <Preloader size="large" />
 
     if(props.words.length) return <Game words={props.words} clearGame={props.clearGame}/>
 
@@ -34,7 +34,7 @@ const Games = (props) => {
                     </Typography>
                     <Divider />
                 
-                    {props.isLoading ? 
+                    {props.isLoading || !props.isInitializePage ? 
                         <Preloader size="small"/>
                     :
                         <GamesVocListContainer />
@@ -50,7 +50,7 @@ const Games = (props) => {
                     </Typography>
                     <Divider />
                     
-                    {props.isLoading ? 
+                    {props.isLoading || !props.isInitializePage ? 
                         <Preloader size="small"/>
                     :
                     <>

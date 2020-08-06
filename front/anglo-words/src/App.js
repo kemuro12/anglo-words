@@ -15,7 +15,7 @@ import Preloader from './components/templates/Preloader/Preloader';
 
 
 function App(props) {
-  
+  console.log("APP")
   useEffect(() => {
     if(!props.initialized) props.initializeApp();
   },[props.initialized])

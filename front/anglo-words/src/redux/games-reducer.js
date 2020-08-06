@@ -5,6 +5,7 @@ const TOGGLE_GAMEMODE = 'games/TOGGLE_GAMEMODE';
 const SET_WORDS = 'games/SET_WORDS';
 const CLEAR_GAME = 'games/CLEAR_GAME';
 const SET_INITIALIZE_LOADING = 'games/SET_INITIALIZE_LOADING';
+const FIRST_INITIALIZE = 'games/FIRST_INITIALIZE';
 
 let initialState = {
     gameModes:[
@@ -28,7 +29,8 @@ let initialState = {
     selectedVocs : [],
     selectedGameMode : 1,
     words: [],
-    isInitializedLoading: false
+    isGameInitialize: false,
+    isInitializePage: false
 }
 
 const gamesReducer = (state = initialState, action) => {
@@ -66,7 +68,13 @@ const gamesReducer = (state = initialState, action) => {
         case SET_INITIALIZE_LOADING: {
             return {
                 ...state,
-                isInitializedLoading: !state.isInitializedLoading
+                isGameInitialize: !state.isGameInitialize
+            }
+        }
+        case FIRST_INITIALIZE: {
+            return {
+                ...state,
+                isInitializePage: !state.isInitializePage
             }
         }
         default:
@@ -91,8 +99,7 @@ export const setGameMode = (gameModeId) => {
 export const setWords = (words) => {
     return {
         type: SET_WORDS,
-        words,
-        isInitialized: true
+        words
     }
 }
 
@@ -102,13 +109,24 @@ export const clearGame = () => {
     }
 }
 
-
 export const toggleInitializeLoading = () => {
     return {
         type : SET_INITIALIZE_LOADING
     }
 }
+
+export const initializeGamesPageToggleAC = () => {
+    return {
+        type: FIRST_INITIALIZE
+    }
+}
 /* THUNKS */
+
+export const initializeGamesPageToggle = () => {
+    return (dispatch) => {
+        dispatch(initializeGamesPageToggleAC())
+    }
+}
 
 export const initializeGame = ( gameMode, selectedVocs, mainLanguage ) => {
     return async (dispatch) => {

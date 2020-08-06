@@ -3,6 +3,7 @@ import { List, Typography } from '@material-ui/core';
 import Word from './Word/Word';
 
 const WordsList = (props) => {
+    console.log("WORDS LIST")
     const [editWord, setEditWord] = useState(0);
 
     const handleEditClick = (wordId) => {

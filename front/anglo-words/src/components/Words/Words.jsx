@@ -60,6 +60,7 @@ const AddWordReduxForm = reduxForm({
 })(addWordForm)
 
 const Words = (props) => {
+    console.log("WORDS")
     const [accordionOpen, setAccordionOpen] = useState(false);
     const History = useHistory();
 

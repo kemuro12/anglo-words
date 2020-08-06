@@ -2,16 +2,20 @@ import React, { useEffect } from 'react';
 import Games from './Games';
 import { connect } from 'react-redux';
 import { getVocsByUserId } from '../../redux/voc-reducer';
-import { initializeGame, clearGame } from '../../redux/games-reducer';
+import { initializeGame, initializeGamesPageToggle ,clearGame } from '../../redux/games-reducer';
 
 const GamesContainer = (props) => {
 
     useEffect(() => {
-        props.getVocsByUserId(props.userId) 
+        props.getVocsByUserId(props.userId, 0) 
+        props.initializeGamesPageToggle();
     }, [props.userId])
 
     //willUnMount
-    useEffect(() => () => props.clearGame(), [])
+    useEffect(() => () => {
+        props.clearGame()
+        props.initializeGamesPageToggle();
+    }, [])
 
     return (
         <Games 
@@ -23,7 +27,8 @@ const GamesContainer = (props) => {
             clearGame={props.clearGame}
             vocs={props.vocs}
             isLoading={props.isLoading}
-            isInitializedLoading={props.isInitializedLoading}
+            isGameInitialize={props.isGameInitialize}
+            isInitializePage={props.isInitializePage}
         />
     )
 }
@@ -37,8 +42,9 @@ const mapStateToProps = (state) => {
         selectedVocs: state.games.selectedVocs,
         words: state.games.words,
         isLoading: state.preloader.isLoading,
-        isInitializedLoading: state.games.isInitializedLoading
+        isGameInitialize: state.games.isGameInitialize,
+        isInitializePage:state.games.isInitializePage
     }
 }
 
-export default connect(mapStateToProps, { getVocsByUserId, initializeGame, clearGame })(GamesContainer);
+export default connect(mapStateToProps, { getVocsByUserId, initializeGame, initializeGamesPageToggle, clearGame })(GamesContainer);

@@ -5,6 +5,7 @@ import { toggleModal } from '../../../redux/modal-reducer';
 import { deleteWord, updateWord, getWordsByVocId } from '../../../redux/words-reducer';
 
 const WordsListContainer = (props) => {
+    console.log("WORDS LIST CONT")
     return (
         <WordsList 
             words={props.words}

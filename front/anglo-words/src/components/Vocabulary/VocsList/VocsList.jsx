@@ -5,7 +5,6 @@ import { List, Typography } from '@material-ui/core';
 import Voc from './Voc/Voc';
 
 const VocsList = (props) => {
-    console.log("VOCS LIST")
     const [editVoc, setEditVoc] = useState(0);
     const history = useHistory();
 
