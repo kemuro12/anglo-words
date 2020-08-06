@@ -10,17 +10,27 @@ const WordsContainer = (props) => {
         if(!props.voc) props.getVocById(props.match.params.vocId)
         else if(props.voc.id !== props.match.params.vocId) props.getVocById(props.match.params.vocId)
         props.getWordsByVocId(props.match.params.vocId)
-        
     }, [props.match.params.vocId])
 
     return (
-        <Words addNewWord={props.addNewWord} voc={props.voc} urlVocId={props.match.params.vocId} />
+        <Words 
+            addNewWord={props.addNewWord} 
+            voc={props.voc}
+            urlVocId={props.match.params.vocId} 
+            isLoading={props.isLoading} 
+            getWordsByVocId={props.getWordsByVocId}
+            currentPage={props.currentPage}
+            pageOptions={props.pageOptions}
+        />
     )
 }
 
 const mapStateToProps = (state) => {
     return {
-        voc: state.words.voc
+        voc: state.words.voc,
+        isLoading: state.preloader.isLoading,
+        currentPage: state.words.currentPage,
+        pageOptions: state.words.pageOptions
     }
 }
 

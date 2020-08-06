@@ -5,11 +5,11 @@ import { List, Typography } from '@material-ui/core';
 import Voc from './Voc/Voc';
 
 const VocsList = (props) => {
+    console.log("VOCS LIST")
     const [editVoc, setEditVoc] = useState(0);
     const history = useHistory();
 
     const handleListItemClick = (vocId) => {
-        
         return (e) => {
             if(e.target.tagName !== "INPUT" && e.target.innerText !== "ОК") history.push('/vocabulary/' + vocId);
         }
@@ -23,7 +23,12 @@ const VocsList = (props) => {
                 {
                     buttonTitle: "Да",
                     buttonClassName: "successButton",
-                    buttonAction: () => props.deleteVoc(vocId)
+                    buttonAction: async () => {
+                        await props.deleteVoc(vocId)
+                        let page = props.currentPage;
+                        if(props.vocs.length === 1) page--;
+                        props.getVocsByUserId(props.userId, page)
+                    }
                 },
                 {
                     buttonTitle: "Нет",
@@ -52,10 +57,10 @@ const VocsList = (props) => {
     }
 
     const handleOnSubmitEditForm = () => {
-        return (formData) => {
+        return async (formData) => {
             let currentVoc = props.vocs.find(voc => voc.id === editVoc);
-            props.updateVoc(editVoc, formData.title, currentVoc.description, formData.isPrivate ? 1 : 0, currentVoc.wordsCount)
-            setEditVoc(0);
+            await props.updateVoc(editVoc, formData.title, currentVoc.description, formData.isPrivate ? 1 : 0, currentVoc.wordsCount)
+            props.getVocsByUserId(props.userId, props.currentPage)
         }
     }
 

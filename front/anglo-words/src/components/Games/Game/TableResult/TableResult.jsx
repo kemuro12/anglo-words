@@ -14,14 +14,10 @@ const TableResult = (props) => {
     else if (percent > 50) resultWord = "Неплохой результат!"
     else resultWord = "Нужно попробовать еще раз!"
 
-    const onClickEndGame = () => {
-        props.clearGame();
-    }
-
     return (
         <Grid container>
             <Grid item xs={12} lg={10} className={styles.gameBlock}>
-                <Button size="small" style={{color:'red'}} onClick={ onClickEndGame }>Вернуться</Button>
+                <Button size="small" style={{color:'red'}} onClick={ props.onClickEndGame }>Вернуться</Button>
                 <div>
                     <h3>{ correctAnswers } / { props.words.length } ({ percent }%) - { resultWord }</h3>
                 </div>

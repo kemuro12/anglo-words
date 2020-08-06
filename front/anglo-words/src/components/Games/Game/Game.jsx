@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Card, Typography, Button } from '@material-ui/core';
 import { Input } from '../../templates/FormsControls/FormsControls';
 import styles from './Game.module.css';
-import { requiredField } from '../../../utils/validators/validators';
 import { reduxForm, Field } from 'redux-form';
 import TableResult from './TableResult/TableResult';
 
@@ -32,7 +31,6 @@ const questForm = (props) => {
                     autoFocus
                     onKeyDown={ (e) => e.keyCode === 13 && props.submit() }
                     component={Input}
-                    validate={[requiredField]}
                 />
             </div>
             <div>
@@ -54,6 +52,10 @@ const Game = React.memo((props) => {
 
     const words = props.words;
 
+    const onClickEndGame = () => {
+        props.clearGame();
+    }
+
     const onAnswerQuestion = (formData) => {
         words[currentWord].correct = 
         formData.inputed === words[currentWord].answer 
@@ -69,14 +71,16 @@ const Game = React.memo((props) => {
         
     }
     
-    if(words.length === currentWord) return <TableResult words={words} clearGame={props.clearGame} />
+    if(words.length === currentWord) return <TableResult words={words} onClickEndGame={ onClickEndGame } />
 
     return (
         <div className={styles.gameBlock}>
+            <Button size="small" style={{color:'red'}} onClick={ onClickEndGame }>Закончить</Button>
             <Card className={styles.block}>
+                
 
                 <Typography>
-                    Вопрос №{currentWord + 1}
+                    Вопрос №{currentWord + 1} / {words.length}
                 </Typography>
 
                 { openForm && <QuestInputReduxForm initialValues={{main: words[currentWord].main, inputed: words[currentWord].inputed}} onSubmit={ onAnswerQuestion } />}

@@ -41,16 +41,16 @@ export const vocsAPI = {
         return instance.get('/vocabulary/get')
     },
 
-    getVocsByUserId(userId){
-        return instance.get(`/vocabulary/user/${userId}`)
+    getVocsByUserId(userId, page){
+        return instance.get(`/vocabulary/user/${userId}?page=${page}`)
     },
 
     getVocById(vocId){
         return instance.get(`/vocabulary/get/${vocId}`)
     },
 
-    getWordsByVocId(vocId){
-        return instance.get(`/vocabulary/words/${vocId}`)
+    getWordsByVocId(vocId, page){
+        return instance.get(`/vocabulary/words/${vocId}?page=${page}`)
     },
 
     getWordsByVocsIds(vocIds){

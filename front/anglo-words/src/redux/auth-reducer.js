@@ -7,7 +7,6 @@ const SET_USER_DATA = "auth/SET_USER_DATA"
 let initialState = {
     userId: null,
     login: null,
-    userVocs: null,
     image: null,
     isAuth: false
 }
@@ -25,13 +24,12 @@ const authReducer = (state = initialState, action) => {
     }
 }
 
-export const setUserData = (userId, login, userVocs, image, isAuth) => {
+export const setUserData = (userId, login, image, isAuth) => {
     return {
         type: SET_USER_DATA,
         payload: {
             userId,
             login,
-            userVocs,
             image,
             isAuth
         }
@@ -44,7 +42,7 @@ export const authMe = () => {
         let response = await authAPI.authMe();
         if(response.data.statusCode === 201){
             let user = response.data.data;
-            dispatch(setUserData(user.userId, user.login, user.vocs, user.image, true))
+            dispatch(setUserData(user.userId, user.login, user.image, true))
         }
     }
 }
@@ -67,7 +65,7 @@ export const logout = () => {
         let response = await authAPI.logout();
         if(response.data.statusCode === 201){
             dispatch(authMe())
-            dispatch(setUserData(null, null, null, null, false))
+            dispatch(setUserData(null, null, null, false))
             dispatch(toggleSnackbar(true, "info" ,"Вы успешно вышли из системы!"))
         }
     }

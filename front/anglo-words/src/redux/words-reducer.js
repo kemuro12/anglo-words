@@ -1,16 +1,24 @@
 import { vocsAPI, wordsAPI } from "../api/api";
 import { toggleSnackbar } from "./snackbar-reducer";
 import { updateVoc } from "./voc-reducer";
+import { toggleIsLoading } from "./preloader-reducer";
 
 const SET_VOC = 'words/SET_VOC';
 const SET_WORDS = 'words/SET_WORDS';
 const ADD_WORD = 'words/ADD_WORD';
 const DELETE_WORD_BY_ID = 'words/DELETE_WORD_BY_ID';
 const UPDATE_WORD = 'words/UPDATE_WORD';
+const SET_CURRENT_PAGE = "words/SET_CURRENT_PAGE";
+const SET_PAGE_OPTIONS = "words/SET_PAGE_OPTIONS";
 
 let initialState = {
-   voc: null,
-   words: []
+    voc: null,
+    words: [],
+    currentPage : 1,
+    pageOptions: {
+        countOfWords: 0,
+        pageSize: 0
+    }
 }
 
 const wordsReducer = (state = initialState, action) => {
@@ -53,6 +61,18 @@ const wordsReducer = (state = initialState, action) => {
                 })
             }
         }
+        case SET_CURRENT_PAGE:{
+            return {
+                ...state,
+                currentPage: action.currentPage
+            }
+        }
+        case SET_PAGE_OPTIONS:{
+            return {
+                ...state,
+                pageOptions: action.pageOptions
+            }
+        }
         default:
             return state; 
     }
@@ -93,6 +113,20 @@ export const updateWordAction = (word) => {
     }
 }
 
+export const setPage = (currentPage) => {
+    return {
+        type: SET_CURRENT_PAGE,
+        currentPage
+    }
+}
+
+export const setPageOptions = (pageOptions) => {
+    return {
+        type: SET_PAGE_OPTIONS,
+        pageOptions
+    }
+}
+
 /* THUNKS */
 export const getVocById = (vocId) => {
     return async (dispatch) => {
@@ -103,40 +137,34 @@ export const getVocById = (vocId) => {
     }
 }
 
-export const getWordsByVocId = (vocId) => {
+export const getWordsByVocId = (vocId, page = 1) => {
     return async (dispatch) => {
-        let response = await vocsAPI.getWordsByVocId(vocId);
+        dispatch(toggleIsLoading())
+        let response = await vocsAPI.getWordsByVocId(vocId, page = page);
         if(response.data.statusCode === 200){
-            dispatch(setWords(response.data.data))
+            dispatch(setPage(page))
+            dispatch(setPageOptions(response.data.data.pageOptions))
+            dispatch(setWords(response.data.data.words))
         }
+        dispatch(toggleIsLoading())
     }
 }
 
 export const addNewWord = (voc, word_eng, word_ru) => {
     return async (dispatch) => {
+        dispatch(toggleIsLoading())
         let response = await wordsAPI.createWord(voc.id, word_eng, word_ru);
         if(response.data.statusCode === 200){
-            let word = {
-                id: response.data.data.wordId,
-                word_eng,
-                word_ru
-            }
-            
-            let newVoc = {
-                ...voc,
-                wordsCount : voc.wordsCount + 1
-            }
-            
-            dispatch(updateVoc(voc.id, voc.title, voc.description, voc.isPrivate, voc.wordsCount + 1))
-            dispatch(setVoc(newVoc))
-            dispatch(addWord(word))
+            dispatch(updateVoc(voc.id, voc.title, voc.description, voc.isPrivate, voc.wordsCount + 1, false))
             dispatch(toggleSnackbar(true, "success" ,"Слово Создано!"))
         }
+        dispatch(toggleIsLoading())
     }
 }
 
 export const deleteWord = (voc, wordId) => {
     return async (dispatch) => {
+        dispatch(toggleIsLoading())
         let response = await wordsAPI.deleteWord(wordId);
         if(response.data.statusCode === 200){
             let newVoc = {
@@ -144,16 +172,18 @@ export const deleteWord = (voc, wordId) => {
                 wordsCount : voc.wordsCount - 1
             }
 
-            dispatch(updateVoc(voc.id, voc.title, voc.description, voc.isPrivate, voc.wordsCount - 1))
+            dispatch(updateVoc(voc.id, voc.title, voc.description, voc.isPrivate, voc.wordsCount - 1, false))
             dispatch(setVoc(newVoc))
             dispatch(deleteWordAction(wordId))
             dispatch(toggleSnackbar(true, "success" ,"Слово Удалено!"))
         }
+        dispatch(toggleIsLoading())
     }
 }
 
 export const updateWord = (wordId, word_eng, word_ru) => {
     return async (dispatch) => {
+        dispatch(toggleIsLoading())
         let response = await wordsAPI.updateWord(wordId, word_eng, word_ru);
         if(response.data.statusCode === 201){
             let word = {
@@ -164,6 +194,7 @@ export const updateWord = (wordId, word_eng, word_ru) => {
             dispatch(updateWordAction(word))
             dispatch(toggleSnackbar(true, "warning" ,"Слово Обновлено!"))
         }
+        dispatch(toggleIsLoading())
     }
 }
 

@@ -27,7 +27,12 @@ const WordsList = (props) => {
                 {
                     buttonTitle: "Да",
                     buttonClassName: "successButton",
-                    buttonAction: () => props.deleteWord(voc, wordId)
+                    buttonAction: async () => {
+                        await props.deleteWord(voc, wordId)
+                        let page = props.currentPage;
+                        if(props.words.length === 1) page--;
+                        props.getWordsByVocId(voc.id, page)
+                    }
                 },
                 {
                     buttonTitle: "Нет",

@@ -7,6 +7,7 @@ import { requiredField } from '../../utils/validators/validators';
 import { Input, CheckBox } from '../templates/FormsControls/FormsControls';
 import VocsListContainer from './VocsList/VocsListContainer';
 import Preloader from '../templates/Preloader/Preloader';
+import Pagination from '@material-ui/lab/Pagination';
 
 const addVocForm = (props) => {
 
@@ -59,15 +60,23 @@ const AddVocReduxForm = reduxForm({
 })(addVocForm)
 
 const Vocabulary = (props) => {
-
     const [accordionOpen, setAccordionOpen] = useState(false);
+    console.log(props)
+    
+    const countOfVocs = props.pageOptions.countOfVocs;
+    const pageSize = props.pageOptions.pageSize;
+
+    const onPageChange = (e, value) => {
+        props.getVocsByUserId(props.user.userId, value) 
+    }
 
     const onToggleAccordion = () => {
         setAccordionOpen(!accordionOpen);
     }
-
-    const onAddVocSubmit = (formData) => {
-        props.addNewVoc(formData.title, formData.description, formData.isPrivate, props.user)
+    
+    const onAddVocSubmit = async (formData) => {
+        await props.addNewVoc(formData.title, formData.description, formData.isPrivate, props.user)
+        props.getVocsByUserId(props.user.userId, countOfVocs % pageSize === 0 ? props.currentPage + 1 : props.currentPage)
         setAccordionOpen(false);
     }
 
@@ -84,9 +93,11 @@ const Vocabulary = (props) => {
                     {accordionOpen && <AddVocReduxForm  accordionOpen={accordionOpen} setAccordionOpen={setAccordionOpen} onSubmit={ onAddVocSubmit } /> }
                 </AccordionDetails>
             </Accordion>
-            
+
+            <Pagination shape="rounded" count={ Math.ceil(countOfVocs / pageSize) }  className={styles.paginator} color="primary"  page={ props.currentPage } onChange={ onPageChange } />
+
             {props.isLoading ? 
-            <Preloader  />
+            <Preloader size="small" />
                 :
             <VocsListContainer />
             }

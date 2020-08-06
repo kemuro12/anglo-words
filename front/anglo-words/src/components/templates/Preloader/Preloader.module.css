@@ -1,5 +1,18 @@
+.small{
+    width:100px !important;
+    height: 100px !important;
+    margin: 4% auto !important;
+    display:block !important;
+}
 
-.preloader{
+.medium{
+    width:200px !important;
+    height: 200px !important;
+    margin: 4% auto !important;
+    display:block !important;
+}
+
+.large{
     width:35% !important;
     height: 35% !important;
     margin: 4% auto !important;

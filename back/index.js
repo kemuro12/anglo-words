@@ -3,6 +3,10 @@ const app = express();
 const mysql = require('mysql');
 const cookieParser = require('cookie-parser');
 app.use(cookieParser('secret key'));
+
+const crypto = require('crypto');
+app.use(express.json());
+
 const connectionOptions = {
     host : "localhost",
     user : "mysql",
@@ -24,9 +28,10 @@ function connect(callback=null){
 
 connect();
 
+const defaultWordsPageSize = 10;
+const defaultVocsPageSize = 5;
 
-const crypto = require('crypto');
-app.use(express.json());
+
 
 const createResponse = (res, statusCode, message = "", data = {}) => {
 	res.header("Access-Control-Allow-Origin","http://localhost:3000");
@@ -58,7 +63,6 @@ app.get('/auth/me', (req, res) => {
             res.send(createResponse(res, 201, "Success auth", {
                 userId: result[0].userId,
                 login: result[0].login,
-                vocs: result[0].vocs,
                 image: result[0].image
             }));
             return;
@@ -122,7 +126,6 @@ app.get('/users/get', (req, res) => {
             users.push({
                 userId: user.userId,
                 login: user.login,
-                vocs: user.vocs,
                 image: user.image
             });
         })
@@ -141,7 +144,6 @@ app.get('/users/get/:id', (req, res) => {
             res.send(createResponse(res, 200, "ok",{
                 userId: result[0].userId,
                 login: result[0].login,
-                vocs: result[0].vocs,
                 image: result[0].image
             }));
             return;
@@ -151,7 +153,7 @@ app.get('/users/get/:id', (req, res) => {
 })
 
 app.put('/users/update', (req, res) => {
-    connection.query(`UPDATE users SET vocs='${req.body.vocs}', image='${req.body.image}' WHERE bearer_token='${req.cookies.bearer_token}'`,(err, result)=>{
+    connection.query(`UPDATE users SET image='${req.body.image}' WHERE bearer_token='${req.cookies.bearer_token}'`,(err, result)=>{
         if(err){
             res.send(createResponse(res, 500, "server error"));
             return;
@@ -184,20 +186,41 @@ app.get('/vocabulary/get', (req, res) => {
 })
 
 app.get('/vocabulary/user/:userId', (req, res) => {
-    connection.query(`SELECT * FROM users WHERE userId='${req.params.userId}'`,(err, result)=>{
+    let page = req.query.page - 1;
+    let countOfVocs = 0;
+    connection.query(`SELECT COUNT(*) FROM vocabulary WHERE ownerId=${req.params.userId}`,(err ,res ) => {
+        countOfVocs = res[0]["COUNT(*)"]; 
+    })
+
+    if(page === -1) 
+    connection.query(`SELECT * FROM vocabulary WHERE ownerId='${req.params.userId}'`,(err, result) => {
+        res.send(createResponse(res, 200, "ok", {
+            vocs: result, 
+            pageOptions: {
+                countOfVocs: countOfVocs,
+                pageSize: defaultVocsPageSize
+            }
+        }));
+        return;
+    })
+    else
+    connection.query(`SELECT * FROM vocabulary WHERE ownerId='${req.params.userId}' LIMIT ${page * defaultVocsPageSize},${defaultVocsPageSize}`,(err, result)=>{
         if(err){
             res.send(createResponse(res, 500, "server error"));
             return;
         } 
-
-        if(result.length){
-            let vocs = result[0].vocs
-            connection.query(`SELECT * FROM vocabulary WHERE id IN (${vocs})`,(err, result1)=>{
-                res.send(createResponse(res, 200, "ok", result1));
-            });
+ 
+        if(result){
+            res.send(createResponse(res, 200, "ok", {
+                vocs: result, 
+                pageOptions: {
+                    countOfVocs: countOfVocs,
+                    pageSize: defaultVocsPageSize
+                }
+            }));
             return;
         }
-
+        
         res.send(createResponse(res, 401, "Some error"));
     })
 })
@@ -218,21 +241,29 @@ app.get('/vocabulary/get/:id', (req, res) => {
 })
 
 app.get('/vocabulary/words/:id', (req, res) => {
-    connection.query(`SELECT * FROM words WHERE voc_id='${req.params.id}'`,(err, result)=>{
+    let page = req.query.page - 1;
+    let countOfWords = 0;
+    connection.query(`SELECT COUNT(*) FROM words WHERE voc_id=${req.params.id}`,(err ,res ) => {
+        countOfWords = res[0]["COUNT(*)"]; 
+    })
+
+    connection.query(`SELECT * FROM words WHERE voc_id='${req.params.id}' LIMIT ${page * defaultWordsPageSize},${defaultWordsPageSize}`,(err, result)=>{
         if(err){
             res.send(createResponse(res, 500, "server error"));
             return;
         } 
 
-        if(result.length){
-            res.send(createResponse(res, 200, "ok", result));
+        if(result){
+            res.send(createResponse(res, 200, "ok", {
+                words: result,
+                pageOptions: {
+                    countOfWords: countOfWords,
+                    pageSize: defaultWordsPageSize
+                }
+            }));
             return;
         }
-        if(result.length === 0){
-            res.send(createResponse(res, 200, "ok", []));
-            return;
-        }
-        
+
         res.send(createResponse(res, 401, "Some error"));
     })
 })
@@ -258,13 +289,8 @@ app.post('/vocabulary/create', (req, res) => {
         connection.query(`INSERT INTO vocabulary (id, title, description, ownerId, isPrivate, wordsCount)
         VALUES (NULL, '${req.body.title}', '${req.body.description}', '${req.body.ownerId}', '${req.body.isPrivate}', 0)`,(err, result)=>{
             if(result.affectedRows){
-                connection.query(`SELECT * FROM users WHERE userId='${req.body.ownerId}'`,(err1, result1)=>{
-                    let newVocs = result1[0].vocs + "," + result.insertId; 
-                    connection.query(`UPDATE users SET vocs='${newVocs}' WHERE userId='${req.body.ownerId}'`,(err2, result2)=>{
-                        res.send(createResponse(res, 200, "Voc was created with id = "+result.insertId));
-                        return;
-                    })
-                })
+                res.send(createResponse(res, 200, "Voc was created with id = "+result.insertId, {id: result.insertId}));
+                return;
             }
         })
     }catch(e){
@@ -280,14 +306,12 @@ app.delete('/vocabulary/delete/:id', (req, res) => {
                 res.send(createResponse(res, 401, "Unathorized"));
                 return
             }
-            let newVocs = result[0].vocs.replace(","+req.params.id, "");
+   
             connection.query(`DELETE FROM vocabulary WHERE id='${req.params.id}'`,(err1, result1)=>{
-                connection.query(`UPDATE users SET vocs='${newVocs}' WHERE userId='${result[0].userId}'`,(err2, result2)=>{
-                    connection.query(`DELETE FROM words WHERE voc_id='${req.params.id}'`,(err3, result3)=>{
-                        res.send(createResponse(res, 200, "Voc was deleted with id = " + req.params.id));
-                        return;
-                    })  
-                })
+                connection.query(`DELETE FROM words WHERE voc_id='${req.params.id}'`,(err3, result3)=>{
+                    res.send(createResponse(res, 200, "Voc was deleted with id = " + req.params.id));
+                    return;
+                })  
             })
         });
     }catch(e){
@@ -363,17 +387,6 @@ app.delete('/words/delete/:id', (req, res) => {
     })
 })
 /* END */
-app.get('/', (req,res) => {
-    res.header("Access-Control-Allow-Origin","*");
-    res.header("Access-Control-Allow-Credentials","true");
-    
-    let query = connection.query(`SELECT * FROM users WHERE login='admin'`,(err,result)=>{
-        console.log(result);
-    });
-
-
-    res.send("ok");
-})
 
 app.listen(4040, (err) => {
     console.log("server run on port 4040");

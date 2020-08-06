@@ -1,13 +1,20 @@
 import { vocsAPI } from "../api/api";
-import { authMe } from "./auth-reducer";
 import { toggleSnackbar } from "./snackbar-reducer";
 import { toggleIsLoading } from "./preloader-reducer";
+import { setVoc } from "./words-reducer";
 
 const SET_VOCS = "voc/SET_VOCS";
 const SET_VOC = "voc/SET_VOC";
+const SET_CURRENT_PAGE = "voc/SET_CURRENT_PAGE";
+const SET_PAGE_OPTIONS = "voc/SET_PAGE_OPTIONS";
 
 let initialState = {
-   vocs: []
+    vocs: [],
+    currentPage: 1,
+    pageOptions: {
+        countOfVocs: 0,
+        pageSize: 0
+    }
 }
 
 const vocReducer = (state = initialState, action) => {
@@ -32,15 +39,20 @@ const vocReducer = (state = initialState, action) => {
                 })
             }
         }
+        case SET_CURRENT_PAGE:{
+            return {
+                ...state,
+                currentPage: action.currentPage
+            }
+        }
+        case SET_PAGE_OPTIONS:{
+            return {
+                ...state,
+                pageOptions: action.pageOptions
+            }
+        }
         default:
             return state; 
-    }
-}
-
-export const setVoc = (voc) => {
-    return {
-        type: SET_VOC,
-        voc
     }
 }
 
@@ -51,15 +63,31 @@ export const setVocs = (vocs) => {
     }
 }
 
+export const setPage = (currentPage) => {
+    return {
+        type: SET_CURRENT_PAGE,
+        currentPage
+    }
+}
+
+export const setPageOptions = (pageOptions) => {
+    return {
+        type: SET_PAGE_OPTIONS,
+        pageOptions
+    }
+}
+
 /* THUNKS */
-export const getVocsByUserId = (userId) => {
+export const getVocsByUserId = (userId, page = 1) => {
     return async (dispatch) => {
         dispatch(toggleIsLoading())
-        let response = await vocsAPI.getVocsByUserId(userId);
+        let response = await vocsAPI.getVocsByUserId(userId, page = page);
         if(response.data.statusCode === 200){
-            dispatch(toggleIsLoading())
-            dispatch(setVocs(response.data.data));
+            dispatch(setPage(page))
+            dispatch(setPageOptions(response.data.data.pageOptions))
+            dispatch(setVocs(response.data.data.vocs))
         }
+        dispatch(toggleIsLoading())
     }
 }
 
@@ -68,7 +96,6 @@ export const addNewVoc = (title, description, isPrivate, user) => {
         let response1 = await vocsAPI.createVoc(title, description, user.userId, isPrivate ? 1 : 0);
         if(response1.data.statusCode === 200){
             dispatch(toggleSnackbar(true, "success" ,"Словарь Создан!"))
-            dispatch(authMe())
         }
     }
 }
@@ -78,12 +105,11 @@ export const deleteVoc = (vocId) => {
         let response = await vocsAPI.deleteVoc(vocId);
         if(response.data.statusCode === 200 ){
             dispatch(toggleSnackbar(true, "success" ,"Словарь Удален!"))
-            dispatch(authMe())
         }
     }
 }
 
-export const updateVoc = (vocId, title, description, isPrivate, wordsCount) => {
+export const updateVoc = (vocId, title, description, isPrivate, wordsCount, isSnackbar = true) => {
     return async (dispatch) => {
         let response = await vocsAPI.updateVoc(vocId, title, description, isPrivate, wordsCount);
         if(response.data.statusCode === 201){
@@ -94,7 +120,7 @@ export const updateVoc = (vocId, title, description, isPrivate, wordsCount) => {
                 wordsCount
             }
             dispatch(setVoc(voc));
-            dispatch(toggleSnackbar(true, "warning" ,"Словарь Обновлен!"))
+            if(isSnackbar) dispatch(toggleSnackbar(true, "warning" ,"Словарь Обновлен!"))
         }
     }
 }

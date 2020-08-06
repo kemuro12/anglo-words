@@ -7,8 +7,8 @@ import { initializeGame, clearGame } from '../../redux/games-reducer';
 const GamesContainer = (props) => {
 
     useEffect(() => {
-        if(props.vocs.length !== props.user.userVocs.split(",").length) props.getVocsByUserId(props.user.userId) 
-    }, [props.user.userVocs])
+        props.getVocsByUserId(props.userId) 
+    }, [props.userId])
 
     //willUnMount
     useEffect(() => () => props.clearGame(), [])
@@ -22,21 +22,22 @@ const GamesContainer = (props) => {
             words={props.words}
             clearGame={props.clearGame}
             vocs={props.vocs}
+            isLoading={props.isLoading}
+            isInitializedLoading={props.isInitializedLoading}
         />
     )
 }
 
 const mapStateToProps = (state) => {
     return {
-        user: {
-            userId: state.auth.userId,
-            userVocs: state.auth.userVocs
-        },
+        userId: state.auth.userId,
         gameModes: state.games.gameModes,
         selectedGameMode: state.games.selectedGameMode,
         vocs: state.vocabulary.vocs,
         selectedVocs: state.games.selectedVocs,
         words: state.games.words,
+        isLoading: state.preloader.isLoading,
+        isInitializedLoading: state.games.isInitializedLoading
     }
 }
 

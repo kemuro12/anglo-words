@@ -4,6 +4,7 @@ const TOGGLE_VOC = 'games/TOGGLE_VOC';
 const TOGGLE_GAMEMODE = 'games/TOGGLE_GAMEMODE';
 const SET_WORDS = 'games/SET_WORDS';
 const CLEAR_GAME = 'games/CLEAR_GAME';
+const SET_INITIALIZE_LOADING = 'games/SET_INITIALIZE_LOADING';
 
 let initialState = {
     gameModes:[
@@ -26,7 +27,8 @@ let initialState = {
     ],
     selectedVocs : [],
     selectedGameMode : 1,
-    words: []
+    words: [],
+    isInitializedLoading: false
 }
 
 const gamesReducer = (state = initialState, action) => {
@@ -50,8 +52,7 @@ const gamesReducer = (state = initialState, action) => {
         case SET_WORDS:{
             return {
                 ...state,
-                words: action.words,
-                isGameStart: true
+                words: action.words
             }
         }
         case CLEAR_GAME: {
@@ -60,6 +61,12 @@ const gamesReducer = (state = initialState, action) => {
                 selectedVocs : [],
                 selectedGameMode : 1,
                 words: []
+            }
+        }
+        case SET_INITIALIZE_LOADING: {
+            return {
+                ...state,
+                isInitializedLoading: !state.isInitializedLoading
             }
         }
         default:
@@ -84,7 +91,8 @@ export const setGameMode = (gameModeId) => {
 export const setWords = (words) => {
     return {
         type: SET_WORDS,
-        words
+        words,
+        isInitialized: true
     }
 }
 
@@ -94,10 +102,17 @@ export const clearGame = () => {
     }
 }
 
+
+export const toggleInitializeLoading = () => {
+    return {
+        type : SET_INITIALIZE_LOADING
+    }
+}
 /* THUNKS */
 
 export const initializeGame = ( gameMode, selectedVocs, mainLanguage ) => {
     return async (dispatch) => {
+        dispatch(toggleInitializeLoading())
         let response = await vocsAPI.getWordsByVocsIds(selectedVocs);
         if(response.data.statusCode === 200) {
             let words = response.data.data
@@ -117,6 +132,7 @@ export const initializeGame = ( gameMode, selectedVocs, mainLanguage ) => {
             
             words = gameMode.rules.shuffle(words);
             dispatch(setWords(words))
+            dispatch(toggleInitializeLoading())
         }
     }
 }

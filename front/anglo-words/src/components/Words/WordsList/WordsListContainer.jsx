@@ -2,7 +2,7 @@ import React from 'react';
 import WordsList from './WordsList';
 import { connect } from 'react-redux';
 import { toggleModal } from '../../../redux/modal-reducer';
-import { deleteWord, updateWord } from '../../../redux/words-reducer';
+import { deleteWord, updateWord, getWordsByVocId } from '../../../redux/words-reducer';
 
 const WordsListContainer = (props) => {
     return (
@@ -12,6 +12,8 @@ const WordsListContainer = (props) => {
             deleteWord={props.deleteWord}
             updateWord={props.updateWord}
             voc={props.voc}
+            currentPage={props.currentPage}
+            getWordsByVocId={props.getWordsByVocId}
         />
     )
 }
@@ -19,8 +21,9 @@ const WordsListContainer = (props) => {
 const mapStateToProps = (state) => {
     return {
         words: state.words.words,
+        currentPage: state.words.currentPage,
         voc: state.words.voc
     }
 }
 
-export default connect(mapStateToProps, { toggleModal, deleteWord, updateWord })(WordsListContainer);
+export default connect(mapStateToProps, { toggleModal, deleteWord, updateWord, getWordsByVocId })(WordsListContainer);

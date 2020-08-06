@@ -4,7 +4,7 @@ import { CircularProgress } from '@material-ui/core';
 
 const Preloader = (props) => {
     return (
-        <CircularProgress className={styles.preloader} />
+        <CircularProgress className={props.size === "small" ? styles.small : props.size === "medium" ? styles.medium : styles.large } />
     )
 }
 
