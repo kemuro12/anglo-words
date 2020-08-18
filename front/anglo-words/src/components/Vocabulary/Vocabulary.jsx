@@ -17,7 +17,7 @@ const addVocForm = (props) => {
 
     return (
         <form onSubmit={props.handleSubmit}>
-            <div >
+            <div className={styles.inputBlock}>
                 <Field 
                     label="Название"
                     name="title"
@@ -29,7 +29,7 @@ const addVocForm = (props) => {
                 />
             </div>
 
-            <div >
+            <div className={styles.inputBlock}>
                 <Field 
                     label="Описание"
                     name="description"
@@ -60,7 +60,7 @@ const AddVocReduxForm = reduxForm({
 })(addVocForm)
 
 const Vocabulary = (props) => {
-    console.log("VOC")
+    
     const [accordionOpen, setAccordionOpen] = useState(false);
     
     const countOfVocs = props.pageOptions.countOfVocs;

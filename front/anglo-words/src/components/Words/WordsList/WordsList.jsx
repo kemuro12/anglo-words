@@ -3,7 +3,7 @@ import { List, Typography } from '@material-ui/core';
 import Word from './Word/Word';
 
 const WordsList = (props) => {
-    console.log("WORDS LIST")
+   
     const [editWord, setEditWord] = useState(0);
 
     const handleEditClick = (wordId) => {
@@ -57,7 +57,8 @@ const WordsList = (props) => {
     const words_mas = props.words.map((word, count) => 
         <Word 
             key={count}
-            num={count}
+            isAuth={props.isAuth}
+            num={(props.currentPage - 1) * 10 + count}
             editMode={word.id === editWord ? true : false}
             word={word}
             handleEditClick={ handleEditClick(word.id) }
@@ -69,7 +70,7 @@ const WordsList = (props) => {
     return (
         <List>
             {words_mas.length === 0 ? 
-                <Typography>--- У вас нет ни одного слова</Typography>
+                <Typography>-Словарь пуст-</Typography>
             :
                 words_mas
             }

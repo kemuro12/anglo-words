@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { getVocsByUserId, addNewVoc, deleteVoc, updateVoc } from '../../redux/voc-reducer';
 import { compose } from 'redux';
 import { toggleModal } from '../../redux/modal-reducer';
+import { withAuthRedirect } from '../../hocs/withAuthRedirect';
 
 const VocabularyContainer = (props) => {
     useEffect(() => {
@@ -36,5 +37,6 @@ const mapStateToProps = (state) => {
 }
 
 export default compose(
-    connect(mapStateToProps, { getVocsByUserId, addNewVoc, deleteVoc, updateVoc, toggleModal })
+    connect(mapStateToProps, { getVocsByUserId, addNewVoc, deleteVoc, updateVoc, toggleModal }),
+    withAuthRedirect
 )(VocabularyContainer);

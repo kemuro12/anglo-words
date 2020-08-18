@@ -12,10 +12,10 @@ import { withWidth } from '@material-ui/core';
 import WordsContainer from './components/Words/WordsContainer';
 import GamesContainer from './components/Games/GamesContainer';
 import Preloader from './components/templates/Preloader/Preloader';
+import LibraryContainer from './components/Library/LibraryContainer';
 
 
 function App(props) {
-  console.log("APP")
   useEffect(() => {
     if(!props.initialized) props.initializeApp();
   },[props.initialized])
@@ -30,6 +30,7 @@ function App(props) {
 
       <div className="app-content">
         <Route exact path="/" render={() => <div>main</div>} />
+        <Route exact path="/library" render={() => <LibraryContainer />} />
         <Route exact path="/vocabulary" render={() => <VocabularyContainer />} />
         <Route exact path="/vocabulary/:vocId" render={() => <WordsContainer />} />
         <Route exact path="/games" render={() => <GamesContainer />} />

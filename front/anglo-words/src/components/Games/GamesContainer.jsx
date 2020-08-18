@@ -3,6 +3,8 @@ import Games from './Games';
 import { connect } from 'react-redux';
 import { getVocsByUserId } from '../../redux/voc-reducer';
 import { initializeGame, initializeGamesPageToggle ,clearGame } from '../../redux/games-reducer';
+import { compose } from 'redux';
+import { withAuthRedirect } from '../../hocs/withAuthRedirect';
 
 const GamesContainer = (props) => {
 
@@ -47,4 +49,7 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, { getVocsByUserId, initializeGame, initializeGamesPageToggle, clearGame })(GamesContainer);
+export default compose(
+    connect(mapStateToProps, { getVocsByUserId, initializeGame, initializeGamesPageToggle, clearGame }),
+    withAuthRedirect
+)(GamesContainer);

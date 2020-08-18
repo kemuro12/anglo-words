@@ -5,7 +5,6 @@ import { toggleModal } from '../../../redux/modal-reducer';
 import { deleteWord, updateWord, getWordsByVocId } from '../../../redux/words-reducer';
 
 const WordsListContainer = (props) => {
-    console.log("WORDS LIST CONT")
     return (
         <WordsList 
             words={props.words}
@@ -15,6 +14,7 @@ const WordsListContainer = (props) => {
             voc={props.voc}
             currentPage={props.currentPage}
             getWordsByVocId={props.getWordsByVocId}
+            isAuth={props.isAuth}
         />
     )
 }
@@ -22,6 +22,7 @@ const WordsListContainer = (props) => {
 const mapStateToProps = (state) => {
     return {
         words: state.words.words,
+        isAuth:state.auth.isAuth,
         currentPage: state.words.currentPage,
         voc: state.words.voc
     }

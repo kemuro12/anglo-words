@@ -5,6 +5,7 @@ import { List, Typography } from '@material-ui/core';
 import Voc from './Voc/Voc';
 
 const VocsList = (props) => {
+    console.log(props)
     const [editVoc, setEditVoc] = useState(0);
     const history = useHistory();
 
@@ -58,7 +59,7 @@ const VocsList = (props) => {
     const handleOnSubmitEditForm = () => {
         return async (formData) => {
             let currentVoc = props.vocs.find(voc => voc.id === editVoc);
-            await props.updateVoc(editVoc, formData.title, currentVoc.description, formData.isPrivate ? 1 : 0, currentVoc.wordsCount)
+            await props.updateVoc(editVoc, formData.title, formData.description, formData.isPrivate ? 1 : 0, currentVoc.wordsCount)
             props.getVocsByUserId(props.userId, props.currentPage)
         }
     }
@@ -68,7 +69,7 @@ const VocsList = (props) => {
             voc={voc} 
             editMode={voc.id === editVoc ? true : false}
             key={voc.id}
-            num={count}
+            num={(props.currentPage - 1) * 10 + count}
             handleOnSubmitEditForm={ handleOnSubmitEditForm() }
             handleListItemClick={ handleListItemClick(voc.id) }
             handleEditClick={ handleEditClick(voc.id) }

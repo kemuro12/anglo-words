@@ -52,7 +52,6 @@ const EditWordReduxForm = reduxForm({
 })(editWordForm)
 
 const Word = (props) => {
-    console.log("WORD")
 
     const word = props.word;
 
@@ -78,12 +77,16 @@ const Word = (props) => {
                         <Typography className={styles.wordRu}>
                             {word.word_ru.length ? "Перевод:" : ""} {word.word_ru}
                         </Typography>
-                        <IconButton onClick={ props.handleEditClick }>
-                            <EditIcon style={{color:"rgb(255,152,0)"}}/>
-                        </IconButton>
-                        <IconButton onClick={ props.handleDeleteWord }>
-                            <DeleteIcon color="error"/>
-                        </IconButton>
+                        {props.isAuth ? 
+                            <>
+                                <IconButton onClick={ props.handleEditClick }>
+                                    <EditIcon style={{color:"rgb(255,152,0)"}}/>
+                                </IconButton>
+                                <IconButton onClick={ props.handleDeleteWord }>
+                                    <DeleteIcon color="error"/>
+                                </IconButton>
+                            </>
+                        :""}
                     </div>                        
                 </ListItemSecondaryAction>  
              </>

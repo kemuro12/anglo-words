@@ -75,6 +75,10 @@ export const wordsAPI = {
         return instance.post(`/words/create`, {voc_id, word_eng, word_ru}) 
     },
 
+    createWords(voc_id, words){
+        return instance.post(`/words/create`, {voc_id, words})
+    },
+
     updateWord(wordId, word_eng, word_ru){
         return instance.put(`/words/update/${wordId}`, {word_eng, word_ru})
     },

@@ -7,7 +7,6 @@ import Preloader from '../templates/Preloader/Preloader';
 import Game from './Game/Game';
 
 const Games = (props) => {
-    console.log(props)
     const [mainLanguage, setMainLanguage] = useState("eng")
   
     if(props.isGameInitialize ) return <Preloader size="large" />

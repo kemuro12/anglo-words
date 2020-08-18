@@ -9,26 +9,45 @@ import { ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, IconButt
 
 const editVocForm = (props) => {
     return (
-        <form onSubmit={props.handleSubmit} className={styles.editForm}>
-            <Field 
-                label="Название"
-                name="title"
-                size="small"
-                autoFocus={true}
-                autoComplete="off"
-                component={Input}
-                validate={[requiredField]}
-            />
+        <form onSubmit={props.handleSubmit} >
+            
+           <div className={styles.editForm}>
+                <Field 
+                    label="Название"
+                    name="title"
+                    size="small"
+                    autoFocus={true}
+                    autoComplete="off"
+                    component={Input}
+                    validate={[requiredField]}
+                />
+
+                <Field 
+                    type="checkbox" 
+                    name="isPrivate"
+                    label="Приватность"
+                    color="primary"
+                    component={CheckBox} 
+                />
+           </div>
+           
+           <div className={styles.editForm}>
+                <Field 
+                    label="Описание"
+                    name="description"
+                    size="small"
+                    autoComplete="off"
+                    component={Input}
+                    validate={[requiredField]}
+                />
         
-            <Field 
-                type="checkbox" 
-                name="isPrivate"
-                label="Приватность"
-                color="primary"
-                component={CheckBox} 
-            />
-       
-            <Button onClick={ props.submit } variant="contained" size="small" style={{marginLeft:"20px",background:'rgb(76,175,80)',color:'white'}} >Ок</Button>
+                <Button onClick={ props.submit } variant="contained" size="small" style={{marginLeft:"20px",background:'rgb(76,175,80)',color:'white'}} >
+                    Ок
+                </Button>
+            </div>
+
+
+            
         </form>
     )
 }
@@ -48,7 +67,7 @@ const Voc = (props) => {
             </ListItemIcon> 
 
             { props.editMode ? 
-                <EditVocReduxForm initialValues={{title: voc.title, isPrivate: voc.isPrivate}} onSubmit={ props.handleOnSubmitEditForm } /> 
+                <EditVocReduxForm initialValues={{title: voc.title, description: voc.description, isPrivate: voc.isPrivate}} onSubmit={ props.handleOnSubmitEditForm } /> 
             :
                 <ListItemText primary={voc.title} />
             }

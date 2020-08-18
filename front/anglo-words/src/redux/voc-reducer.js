@@ -1,7 +1,6 @@
 import { vocsAPI } from "../api/api";
 import { toggleSnackbar } from "./snackbar-reducer";
 import { toggleIsLoading } from "./preloader-reducer";
-import { setVoc } from "./words-reducer";
 
 const SET_VOCS = "voc/SET_VOCS";
 const SET_VOC = "voc/SET_VOC";
@@ -113,13 +112,6 @@ export const updateVoc = (vocId, title, description, isPrivate, wordsCount, isSn
     return async (dispatch) => {
         let response = await vocsAPI.updateVoc(vocId, title, description, isPrivate, wordsCount);
         if(response.data.statusCode === 201){
-            let voc = {
-                id: vocId,
-                title,
-                isPrivate,
-                wordsCount
-            }
-            dispatch(setVoc(voc));
             if(isSnackbar) dispatch(toggleSnackbar(true, "warning" ,"Словарь Обновлен!"))
         }
     }

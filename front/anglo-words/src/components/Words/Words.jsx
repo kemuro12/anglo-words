@@ -60,7 +60,7 @@ const AddWordReduxForm = reduxForm({
 })(addWordForm)
 
 const Words = (props) => {
-    console.log("WORDS")
+    
     const [accordionOpen, setAccordionOpen] = useState(false);
     const History = useHistory();
 
@@ -85,7 +85,15 @@ const Words = (props) => {
 
     return (
         <div>
-            <Button size="small" style={{color:'red'}} onClick={ () => History.push('/vocabulary') }>Вернуться</Button>
+            <Button size="small" style={{color:'red'}} onClick={ () => History.goBack() }>Вернуться</Button>
+            <Typography>
+                <b>
+                    {props.voc ? 
+                        props.voc.title : ""
+                    }
+                </b>
+            </Typography>
+            {props.isAuth ?
             <Accordion expanded={ accordionOpen } onChange={ onToggleAccordion }>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography>
@@ -96,6 +104,7 @@ const Words = (props) => {
                     {accordionOpen && <AddWordReduxForm accordionOpen={accordionOpen} setAccordionOpen={setAccordionOpen} onSubmit={ onAddWordSubmit } /> }
                 </AccordionDetails>
             </Accordion>
+            :""}
            
            {
             props.voc ? props.voc.wordsCount ?  

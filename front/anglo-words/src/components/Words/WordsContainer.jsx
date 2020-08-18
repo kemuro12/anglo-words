@@ -6,7 +6,6 @@ import { withRouter } from 'react-router-dom';
 import { getVocById, getWordsByVocId, addNewWord } from '../../redux/words-reducer';
 
 const WordsContainer = (props) => {
-    console.log("WORDS CONT")
     useEffect(() => {
         if(!props.voc) props.getVocById(props.match.params.vocId)
         else if(props.voc.id !== props.match.params.vocId) props.getVocById(props.match.params.vocId)
@@ -15,6 +14,7 @@ const WordsContainer = (props) => {
 
     return (
         <Words 
+            isAuth={props.isAuth}
             addNewWord={props.addNewWord} 
             voc={props.voc}
             urlVocId={props.match.params.vocId} 
@@ -28,6 +28,7 @@ const WordsContainer = (props) => {
 
 const mapStateToProps = (state) => {
     return {
+        isAuth: state.auth.isAuth,
         voc: state.words.voc,
         isLoading: state.preloader.isLoading,
         currentPage: state.words.currentPage,

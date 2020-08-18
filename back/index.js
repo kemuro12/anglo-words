@@ -29,7 +29,7 @@ function connect(callback=null){
 connect();
 
 const defaultWordsPageSize = 10;
-const defaultVocsPageSize = 5;
+const defaultVocsPageSize = 10;
 
 
 
@@ -247,6 +247,14 @@ app.get('/vocabulary/words/:id', (req, res) => {
         countOfWords = res[0]["COUNT(*)"]; 
     })
 
+    if(page === -1) 
+    connection.query(`SELECT * FROM words WHERE voc_id='${req.params.id}'`,(err, result) => {
+        res.send(createResponse(res, 200, "ok", {
+            words: result
+        }));
+        return;
+    })
+    else
     connection.query(`SELECT * FROM words WHERE voc_id='${req.params.id}' LIMIT ${page * defaultWordsPageSize},${defaultWordsPageSize}`,(err, result)=>{
         if(err){
             res.send(createResponse(res, 500, "server error"));
@@ -340,19 +348,34 @@ app.put('/vocabulary/update/:id', (req, res) => {
 
 /* WORD API */
 app.post('/words/create', (req, res) => {
-    connection.query(`INSERT INTO words (id, voc_id, word_eng, word_ru)
-        VALUES (NULL, '${req.body.voc_id}', '${req.body.word_eng}', '${req.body.word_ru}')`,(err, result)=>{
-        if(err){
-            res.send(createResponse(res, 500, "server error"));
-            return;
-        } 
+    if(req.body.words){
+        let wordsStr = "";
+        req.body.words.forEach(w => wordsStr += `(NULL, ${req.body.voc_id}, ${w.word_eng}, ${w.word_ru}),` )
+        wordsStr = wordsStr.slice(0, -1);
+        connection.query(`INSERT INTO words (id, voc_id, word_eng, word_ru)
+        VALUES ${wordsStr}`,(err, result)=>{
+            if(result.affectedRows){
+                res.send(createResponse(res, 200, "words was created"));
+                return;
+            }
 
-        if(result.affectedRows){
-            res.send(createResponse(res, 200, "word was created with id = "+result.insertId, {wordId: result.insertId}));
-            return;
-        }
-        res.send(createResponse(res, 401, "Some error"));
-    })
+            res.send(createResponse(res, 401, "Some error"));
+        }) 
+    }else{
+        connection.query(`INSERT INTO words (id, voc_id, word_eng, word_ru)
+            VALUES (NULL, '${req.body.voc_id}', '${req.body.word_eng}', '${req.body.word_ru}')`,(err, result)=>{
+            if(err){
+                res.send(createResponse(res, 500, "server error"));
+                return;
+            } 
+
+            if(result.affectedRows){
+                res.send(createResponse(res, 200, "word was created with id = "+result.insertId, {wordId: result.insertId}));
+                return;
+            }
+            res.send(createResponse(res, 401, "Some error"));
+        })
+    }
 })
 
 app.put('/words/update/:id', (req, res) => {

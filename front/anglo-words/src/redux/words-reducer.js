@@ -155,7 +155,13 @@ export const addNewWord = (voc, word_eng, word_ru) => {
         dispatch(toggleIsLoading())
         let response = await wordsAPI.createWord(voc.id, word_eng, word_ru);
         if(response.data.statusCode === 200){
+            let newVoc = {
+                ...voc,
+                wordsCount : voc.wordsCount + 1
+            }
+
             dispatch(updateVoc(voc.id, voc.title, voc.description, voc.isPrivate, voc.wordsCount + 1, false))
+            dispatch(setVoc(newVoc))
             dispatch(toggleSnackbar(true, "success" ,"Слово Создано!"))
         }
         dispatch(toggleIsLoading())

@@ -1,0 +1,36 @@
+.headerBlock{
+    font-size:22px !important;
+    padding:20px;
+}
+.vocTitle{
+    font-size:20px !important;
+    text-align: center;
+    padding:10px;
+    font-weight: 500 !important;
+    border-bottom: 1px solid rgb(193,193,193,0.5);
+}
+
+.vocDescription{
+    font-size:18px !important;
+    padding:15px 5px !important;
+}
+.mainBlock{
+    margin:0 110px;
+}
+.vocBlock{
+    padding:10px;
+}
+.buttons{
+    display:flex;
+    justify-content: space-between;
+}
+
+.buttonLook{
+    background:rgb(25,118,210) !important;
+    color:white !important;
+}
+
+.buttonAdd{
+    background:rgb(67,160,71) !important;
+    color:white !important;
+}

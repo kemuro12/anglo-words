@@ -13,3 +13,7 @@
     display:flex;
     margin-left:-5px;
 }
+
+.editForm input{
+    width:300px;
+}
