@@ -11,10 +11,12 @@ import wordsReducer from './words-reducer';
 import gamesReducer from './games-reducer';
 import preloaderReducer from './preloader-reducer';
 import libraryReducer from './library-reducer';
+import headerReducer from './header-reducer';
 
 let reducers = combineReducers({
     auth: authReducer,
     app: appReducer,
+    header: headerReducer,
     library: libraryReducer,
     snackbar: snackbarReducer,
     modal: modalReducer,

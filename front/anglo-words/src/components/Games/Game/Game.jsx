@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Typography, Button } from '@material-ui/core';
+import { Card, Typography, Button, Box } from '@material-ui/core';
 import { Input } from '../../templates/FormsControls/FormsControls';
 import styles from './Game.module.css';
 import { reduxForm, Field } from 'redux-form';
@@ -7,7 +7,7 @@ import TableResult from './TableResult/TableResult';
 
 const questForm = (props) => {
     return (
-        <form onSubmit={props.handleSubmit} className={styles.questBlock}>
+        <form onSubmit={props.handleSubmit} className={styles.questBlock} >
             <div >
                 <Field 
                     name="main"
@@ -18,9 +18,12 @@ const questForm = (props) => {
                 />
             </div>
 
-            <div>
-                {"<=>"}
-            </div>
+            <Box display={{xs:'none', sm:'none', md:'block'}}>
+                <div>
+                    {"<=>"}
+                </div>
+            </Box>
+            
 
             <div >
                 <Field 

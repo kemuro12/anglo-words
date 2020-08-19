@@ -16,7 +16,17 @@ const ListItemWithCheckbox = React.memo((props) => {
             
             <ListItemSecondaryAction > 
                 <div className={styles.rightBlock}>
-                    {item.wordsCount && <ListItemText className={styles.wordsCount + " " + (props.selected ? styles.selectedItem : "")} primary={item.wordsCount + "/50 слов"}  />}
+                    
+                        {item.wordsCount && 
+                        <Hidden only="xs">
+                            <ListItemText 
+                                className={styles.wordsCount + " " + (props.selected ? styles.selectedItem : "")} 
+                                primary={item.wordsCount + "/50 слов"} 
+                            />
+                        </Hidden>
+                        }
+                    
+                    
 
                     <Checkbox 
                         className={props.selected ? styles.selectedItem : styles.greenCheckbox}

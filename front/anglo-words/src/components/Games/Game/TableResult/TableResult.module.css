@@ -1,7 +1,17 @@
 @media (max-width:960px){
     .gameBlock{
-        margin-right:20px !important;
+        font-size:18px;
     }  
+
+    .true, .true td{
+        font-size:14px;
+        padding:10px !important;
+    }
+
+    .false, .false td{
+        font-size:14px;
+        padding:10px !important;
+    }
 }
 
 .true, .true td{

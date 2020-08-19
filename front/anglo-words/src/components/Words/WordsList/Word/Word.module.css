@@ -2,8 +2,46 @@
     display:flex;
 }
 .wordRu{
-    line-height: 52px !important;
+    line-height: 52px !important;  
 }
 .editForm{
     display: flex;
+}
+.buttonOk{
+    background:rgb(76,175,80) !important;
+    color:white !important;
+}
+
+@media (max-width:959px){
+    .editForm{
+        display: block;
+        margin-left:-30px;
+    }
+    .formInput{
+        margin:15px 0 !important;
+    }
+    .formInput input{
+        width:280px;
+    }
+    .buttonOk{
+        width:100%;
+    }
+    .rightBlock{
+        margin-right:-16px;
+    }
+}
+
+@media (max-width:599px){
+    .word{
+        width:210px !important; 
+    }
+    .wordsBlock{
+        margin-left:-30px;
+    }
+}
+
+@media (max-width:400px){
+    .word{
+        width:160px !important; 
+    }
 }

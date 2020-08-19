@@ -9,6 +9,7 @@ const HeaderContainer = (props) => {
     return (
         <div>
             <Header 
+                links={props.links}
                 isAuth={props.isAuth}
                 image={props.image}
                 login={props.login}
@@ -21,6 +22,7 @@ const HeaderContainer = (props) => {
 
 const mapStateToProps = (state) => {
     return {
+        links: state.header.links,
         isAuth: state.auth.isAuth,
         login: state.auth.login,
         image: state.auth.image

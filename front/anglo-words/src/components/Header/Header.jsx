@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './Header.module.css';
 import NavItem from './NavItem/NavItem';
-import { Avatar, Menu, MenuItem, Container, Toolbar, IconButton, Typography, AppBar, Hidden, Drawer, List, ListItem, ListItemText } from '@material-ui/core';
+import { Avatar, Menu, MenuItem, Container, Toolbar, IconButton, Typography, AppBar, Hidden, Drawer, List, ListItem, Icon } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import { NavLink } from 'react-router-dom';
 
@@ -21,42 +21,37 @@ const Header = (props) => {
         setMobileMenuOpen(!mobileMenuOpen)
     }
 
+    const links_header = props.links.map((link, count) => 
+        link.authShield && !props.isAuth ? 
+        ""
+        : <NavItem key={count} path={ link.path } title={ link.title } currentPath={props.currentPath} icon={ link.icon } />
+    )
+
+    const links_header_mobile = props.links.map((link, count) => 
+        link.authShield && !props.isAuth ? 
+        "" 
+        :<ListItem  key={count} button className={styles.burgerItem + " " + (link.path === props.currentPath ? styles.currentPath : "")}>
+            <NavItem key={count} mobile={true} path={ link.path } title={ link.title } currentPath={props.currentPath} icon={ link.icon } onClick={ onToggleMobileMenuOpen } />
+        </ListItem>
+    )
+
+
     return (
         <AppBar className={styles.header}>
 
             <Drawer open={ mobileMenuOpen } onClose={ onToggleMobileMenuOpen } >
                 <List>
-                    <ListItem button className={styles.burgerItem}>
-                        <NavLink to="/" onClick={ onToggleMobileMenuOpen }>
-                            <Typography>
-                                Главная
-                            </Typography>
-                        </NavLink>
-                    </ListItem>
+                    { links_header_mobile }
 
-                    <ListItem button className={styles.burgerItem}>
-                        <NavLink to="/library" onClick={ onToggleMobileMenuOpen }>
-                            <Typography>
-                                Библиотека
-                            </Typography>
-                        </NavLink>
-                    </ListItem>
-
-                    <ListItem button className={styles.burgerItem}>
-                        <NavLink to="/vocabulary" onClick={ onToggleMobileMenuOpen }>
-                            <Typography>
-                                Мои словари
-                            </Typography>
-                        </NavLink>
-                    </ListItem>
-
-                    <ListItem button className={styles.burgerItem}>
-                        <NavLink to="/games" onClick={ onToggleMobileMenuOpen }>
-                            <Typography>
-                                Тренироваться
-                            </Typography>
-                        </NavLink>
-                    </ListItem>
+                    {props.isAuth ? 
+                        <ListItem button className={styles.burgerItem}>
+                            <NavItem mobile={true} path={ '/' } title={ 'Выйти' } currentPath={props.currentPath} icon={ 'account_box' } onClick={() => {props.logout(); onToggleMobileMenuOpen()}  } />
+                        </ListItem>
+                    :
+                        <ListItem button className={styles.burgerItem + " " + ('/login' === props.currentPath ? styles.currentPath : "")}>
+                            <NavItem mobile={true} path={ '/login' } title={ 'Войти' } currentPath={props.currentPath} icon={ 'account_box' } onClick={ onToggleMobileMenuOpen } />
+                        </ListItem>
+                    }
                 </List>
             </Drawer>
 
@@ -74,21 +69,14 @@ const Header = (props) => {
 
                     <nav className={styles.nav}>
                         <Hidden smDown>
-                            <NavItem path="/" title="Главная" currentPath={props.currentPath}/>
-                            <NavItem path="/library" title="Библиотека" currentPath={props.currentPath}/>
-                            {props.isAuth ? 
-                                <>
-                                    <NavItem path="/vocabulary" title="Мои словари" currentPath={props.currentPath}/>
-                                    <NavItem path="/games" title="Тренироваться" currentPath={props.currentPath}/>
-                                </>
-                            :   
-                                ""
-                            }
+                            { links_header }        
                         </Hidden> 
                     </nav>
                 
                 {!props.isAuth ? 
-                    <NavItem path="/login" title="Логин" currentPath={props.currentPath}/>
+                    <Hidden smDown>
+                        <NavItem path="/login" title="Войти" currentPath={props.currentPath} icon={ "account_circle" } />
+                    </Hidden>   
                 :
                     <div className={styles.avatar}>
                         <Avatar src={props.image} onClick={ onClickAvatar } className={styles.avatar} alt="user-avatar" />

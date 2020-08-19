@@ -25,7 +25,7 @@ const Games = (props) => {
     })
 
     return (
-        <Grid container className={styles.main} spacing={3}>
+        <Grid container className={styles.main} spacing={2}>
             <Grid item xs={12} md={6}>
                 <Card className={styles.fullWidth}>
                     <Typography className={styles.headerBlock}>

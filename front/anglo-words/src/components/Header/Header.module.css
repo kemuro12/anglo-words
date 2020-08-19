@@ -28,7 +28,7 @@
 .avatar {
     width:50px !important;
     height: auto !important;
-    margin:5px 10px;
+    margin:0px 10px;
 }
 .avatar:hover{
     cursor: pointer;
@@ -45,4 +45,10 @@
 }
 .burgerItem a{
     color:black;
+}
+.currentPath {
+    background:rgb(25,118,210) !important;
+}
+.currentPath div{
+    color:white !important;
 }

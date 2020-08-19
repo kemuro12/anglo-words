@@ -1,8 +1,8 @@
 .link{
     width:auto;
-    margin:-3px 10px;
+    margin:0px 10px;
     font-size:20px;
-    padding: 21px 15px 22px 15px;
+    padding: 18px 15px 18px 15px;
     white-space: nowrap;
 }
 
@@ -14,4 +14,27 @@
 .currentPath{
     font-weight: 500;
     background:rgb(0,93,185);
+}
+
+.icon{
+    font-size:22px !important;
+    position: relative;
+    top: 3px;
+    right: 7px;
+}
+
+.link_mobile{
+    width:100% !important;
+    font-size:24px;
+}
+.navLink{
+    width:100%;
+    padding:10px 5px;
+}
+
+.icon_mobile{
+    font-size:26px !important;
+    position: relative;
+    top: 5px;
+    right: 7px;
 }

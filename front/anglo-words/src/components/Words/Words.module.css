@@ -1,7 +1,23 @@
-.wordRu{
-    margin-left:20px;
-}
 .paginator{
     margin-top:10px;
     margin-left:-5px;
+}
+.inputBlock{
+    padding-left:30px;
+}
+.addForm{
+    display:flex;
+}
+@media (max-width:599px){
+    .addForm{
+        display:block;
+    }
+    .inputBlock{
+        width:100%;
+        padding:10px 0 10px 0;
+    }
+    .inputBlock input{
+        width:280px;
+        padding:10px 0 10px 0;
+    }
 }

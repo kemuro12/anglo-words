@@ -60,6 +60,20 @@ export const login = (login, pass, rememberMe = false) => {
     }
 }
 
+export const registration = (login, pass) => {
+    return async (dispatch) => {
+        let response = await authAPI.registration(login, pass);
+        if(response.data.statusCode === 201){
+            await authAPI.login(login, pass, true);
+            dispatch(authMe())
+            dispatch(toggleSnackbar(true, "success" ,"Вы успешно зарегистрировались!"))
+        }else{
+            let message = response.data.message.length > 0 ? response.data.message : "some error"
+            dispatch(stopSubmit("registration", {_error: message}))
+        }
+    }
+}
+
 export const logout = () => {
     return async (dispatch) => {
         let response = await authAPI.logout();

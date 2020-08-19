@@ -19,6 +19,10 @@
     margin-left:-5px;
 }
 
+.inputBlock{
+    width:100% !important;
+}
+
 .inputBlock input{
-    width:500px;
+    width:275px !important;
 }

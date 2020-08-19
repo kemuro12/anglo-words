@@ -9,45 +9,42 @@ import { ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, IconButt
 
 const editVocForm = (props) => {
     return (
-        <form onSubmit={props.handleSubmit} >
+        <form onSubmit={props.handleSubmit} className={styles.editForm} >
             
-           <div className={styles.editForm}>
-                <Field 
-                    label="Название"
-                    name="title"
-                    size="small"
-                    autoFocus={true}
-                    autoComplete="off"
-                    component={Input}
-                    validate={[requiredField]}
-                />
 
-                <Field 
-                    type="checkbox" 
-                    name="isPrivate"
-                    label="Приватность"
-                    color="primary"
-                    component={CheckBox} 
-                />
-           </div>
-           
-           <div className={styles.editForm}>
-                <Field 
-                    label="Описание"
-                    name="description"
-                    size="small"
-                    autoComplete="off"
-                    component={Input}
-                    validate={[requiredField]}
-                />
-        
-                <Button onClick={ props.submit } variant="contained" size="small" style={{marginLeft:"20px",background:'rgb(76,175,80)',color:'white'}} >
-                    Ок
-                </Button>
-            </div>
+            <Field 
+                label="Название"
+                className={styles.formInput}
+                name="title"
+                size="small"
+                autoFocus={true}
+                autoComplete="off"
+                component={Input}
+                validate={[requiredField]}
+            />
 
+            <Field 
+                label="Описание"
+                className={styles.formInput}
+                name="description"
+                size="small"
+                autoComplete="off"
+                component={Input}
+                validate={[requiredField]}
+            />
 
-            
+            <Field 
+                type="checkbox" 
+                name="isPrivate"
+                label="Приватность"
+                color="primary"
+                component={CheckBox} 
+            />
+    
+            <Button onClick={ props.submit } variant="contained" size="small" className={styles.buttonOk} >
+                Ок
+            </Button>
+
         </form>
     )
 }
@@ -57,11 +54,11 @@ const EditVocReduxForm = reduxForm({
 })(editVocForm)
 
 const Voc = (props) => {
-
+    
     const voc = props.voc;
 
     return (
-        <ListItem button onClick={ props.handleListItemClick } divider >
+        <ListItem button onClick={ props.handleListItemClick } className={styles.listItem} divider >
             <ListItemIcon>
                 {props.num + 1}
             </ListItemIcon> 
@@ -69,22 +66,25 @@ const Voc = (props) => {
             { props.editMode ? 
                 <EditVocReduxForm initialValues={{title: voc.title, description: voc.description, isPrivate: voc.isPrivate}} onSubmit={ props.handleOnSubmitEditForm } /> 
             :
-                <ListItemText primary={voc.title} />
+                <ListItemText className={styles.title} primary={voc.title} />
             }
             
 
             <ListItemSecondaryAction >
                 <div className={styles.rightBlock}>
                     <Hidden smDown>
-                        <ListItemText primary={voc.wordsCount + "/50 слов"} className={styles.wordsCount} /> 
+                        <ListItemText primary={voc.wordsCount + `/${props.maxWords} слов`} className={styles.wordsCount + " " + (voc.wordsCount >= props.maxWords ? styles.maxWords : "")} /> 
                     </Hidden>
                     
-                    <IconButton onClick={ props.handleEditClick }>
-                        <EditIcon style={{color:"rgb(255,152,0)"}}/>
-                    </IconButton>
-                    <IconButton onClick={ props.handleDeleteVoc }>
-                        <DeleteIcon color="error"/>
-                    </IconButton>
+                    <Hidden { ...{only: props.editMode ? 'xs' : [] } } >
+                        <IconButton onClick={ props.handleEditClick }>
+                            <EditIcon style={{color:"rgb(255,152,0)"}}/>
+                        </IconButton>
+                        <IconButton onClick={ props.handleDeleteVoc }>
+                            <DeleteIcon color="error"/>
+                        </IconButton>
+                    </Hidden>
+
                 </div>                        
             </ListItemSecondaryAction>  
         </ListItem>

@@ -3,7 +3,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import styles from './Word.module.css';
 import { Input } from '../../../templates/FormsControls/FormsControls';
-import { ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, Hidden, IconButton, Typography, Button } from '@material-ui/core';
+import { ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, Hidden, IconButton, Typography, Button, Divider } from '@material-ui/core';
 import { reduxForm, Field } from 'redux-form';
 import { requiredField } from '../../../../utils/validators/validators';
 
@@ -12,6 +12,7 @@ const editWordForm = (props) => {
         <form onSubmit={props.handleSubmit} className={styles.editForm}>
             <Field 
                 label="Слово"
+                className={styles.formInput}
                 name="word_eng"
                 size="small"
                 autoFocus={true}
@@ -20,6 +21,7 @@ const editWordForm = (props) => {
                 onKeyDown={ (e) => e.keyCode === 13 ? props.submit() : 0 }
             />
         
+            <Hidden only={['xs','sm']}>
                 <ListItemSecondaryAction >
                     <div className={styles.rightBlock}>
                         <div className={styles.wordRu}>
@@ -31,18 +33,32 @@ const editWordForm = (props) => {
                                 onKeyDown={ (e) => e.keyCode === 13 ? props.submit() : 0 }
                             />
                         </div>
+                        
                         <IconButton onClick={ props.handleEditClick }>
                             <EditIcon style={{color:"rgb(255,152,0)"}}/>
                         </IconButton>
                         <IconButton onClick={ props.handleDeleteVoc }>
                             <DeleteIcon color="error"/>
                         </IconButton>
+                        
                     </div>                        
-                </ListItemSecondaryAction>  
-
+                </ListItemSecondaryAction> 
+            </Hidden>
             
-       
-            <Button onClick={ props.submit } variant="contained" size="small" style={{marginLeft:"20px",background:'rgb(76,175,80)',color:'white'}} >Ок</Button>
+            <Hidden mdUp>
+
+                <Field 
+                    label="Перевод"
+                    className={styles.formInput}
+                    name="word_ru"
+                    size="small"
+                    component={Input} 
+                    onKeyDown={ (e) => e.keyCode === 13 ? props.submit() : 0 }
+                />
+
+            </Hidden>
+
+            <Button onClick={ props.submit } variant="contained" size="small" className={styles.buttonOk} >Ок</Button>
         </form>
     )
 }
@@ -52,7 +68,7 @@ const EditWordReduxForm = reduxForm({
 })(editWordForm)
 
 const Word = (props) => {
-
+    
     const word = props.word;
 
     return (
@@ -70,13 +86,26 @@ const Word = (props) => {
                 />
             :
              <>
-                <ListItemText primary={word.word_eng} />
+                <div className={styles.wordsBlock}>
+                    <ListItemText primary={word.word_eng} className={styles.word} />
+                    <Hidden smUp>
+                        <Divider/>
+                        <ListItemText primary={word.word_ru} className={styles.word} />
+                    </Hidden>
+                </div>
+                
 
                 <ListItemSecondaryAction >
                     <div className={styles.rightBlock}>
-                        <Typography className={styles.wordRu}>
-                            {word.word_ru.length ? "Перевод:" : ""} {word.word_ru}
-                        </Typography>
+                        <Hidden only='xs'>
+                            <Typography className={styles.wordRu}>
+                                <Hidden smDown>
+                                    {word.word_ru.length ? "Перевод:" : ""}
+                                </Hidden>
+                                {word.word_ru}
+                            </Typography>
+                        </Hidden>
+                        
                         {props.isAuth ? 
                             <>
                                 <IconButton onClick={ props.handleEditClick }>
@@ -86,7 +115,7 @@ const Word = (props) => {
                                     <DeleteIcon color="error"/>
                                 </IconButton>
                             </>
-                        :""}
+                        : ""}
                     </div>                        
                 </ListItemSecondaryAction>  
              </>

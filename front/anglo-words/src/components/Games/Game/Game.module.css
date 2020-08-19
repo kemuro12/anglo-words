@@ -5,9 +5,9 @@
     padding:15px;
 }
 .questBlock{
-    display:flex;
-    height: 400px;
-    padding:15px;
+    display:flex ;
+    height: 200px ;
+    padding:15px ;
 }
 .input{
     width:auto;
@@ -21,4 +21,24 @@
 .buttonStart{
     color:white !important;
     background:rgb(67,160,71) !important;
+    margin-left:10px !important;
 }
+
+@media (max-width: 959px) {
+    .questBlock {
+      display:block;
+    }
+
+    .input{
+        width:100%;
+        margin-top:20px !important;
+    }
+
+    .buttonStart{
+        margin-top:30px !important;
+        margin-left:0px !important;
+        width:100%;
+        height: 50px;
+    }
+}
+

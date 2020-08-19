@@ -10,6 +10,7 @@ const SET_PAGE_OPTIONS = "voc/SET_PAGE_OPTIONS";
 let initialState = {
     vocs: [],
     currentPage: 1,
+    maxWords:15,
     pageOptions: {
         countOfVocs: 0,
         pageSize: 0
@@ -92,19 +93,23 @@ export const getVocsByUserId = (userId, page = 1) => {
 
 export const addNewVoc = (title, description, isPrivate, user) => {
     return async (dispatch) => {
-        let response1 = await vocsAPI.createVoc(title, description, user.userId, isPrivate ? 1 : 0);
+        let response1 = await vocsAPI.createVoc(title, description, user.userId, user.nickname, isPrivate ? 1 : 0);
         if(response1.data.statusCode === 200){
             dispatch(toggleSnackbar(true, "success" ,"Словарь Создан!"))
+        }else{
+            dispatch(toggleSnackbar(true, "error" ,"Упс... Что-то пошло не так"))
         }
     }
 }
 
 export const deleteVoc = (vocId) => {
     return async (dispatch) => {
+        dispatch(toggleIsLoading())
         let response = await vocsAPI.deleteVoc(vocId);
         if(response.data.statusCode === 200 ){
             dispatch(toggleSnackbar(true, "success" ,"Словарь Удален!"))
         }
+        dispatch(toggleIsLoading())
     }
 }
 

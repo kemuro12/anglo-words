@@ -27,6 +27,7 @@ const mapStateToProps = (state) => {
     return {
         user: {
             userId: state.auth.userId,
+            nickname: state.auth.login,
             image: state.auth.image
         },
         vocs: state.vocabulary.vocs,

@@ -107,7 +107,20 @@ app.delete('/auth/logout', (req, res) => {
 })
 
 app.post('/auth/registration', (req, res) => {
-    res.send("registration");
+    connection.query(`SELECT * FROM users WHERE login = '${req.body.login}'`,(err1, result1) => {
+        if(result1.length === 0){
+            connection.query(`INSERT INTO users (userId, login, pass, image, bearer_token) 
+                VALUES (NULL, '${req.body.login}', '${req.body.pass}', NULL, NULL)`, (err2, result2) => {
+                if(result2.affectedRows){
+                    res.send(createResponse(res, 201, "user created with id = " + result2.insertId))
+                    return;
+                }
+                res.send(createResponse(res, 401, "Fail registration"));
+            })
+        }else{
+            res.send(createResponse(res, 400, "Пользователь с таким login уже существует"));
+        }
+    })
 })
 /* END */
 
@@ -177,11 +190,11 @@ app.get('/vocabulary/get', (req, res) => {
             res.send(createResponse(res, 500, "server error"));
             return;
         } 
-
+        
         let vocs = [];
         result.forEach(voc => vocs.push(voc));
 
-        res.send(createResponse(res, 200, "ok", {vocs}));
+        res.send(createResponse(res, 200, "ok",{vocs}));
     })
 })
 
@@ -294,8 +307,8 @@ app.get('/vocabulary/words',(req, res) => {
 
 app.post('/vocabulary/create', (req, res) => {
     try{
-        connection.query(`INSERT INTO vocabulary (id, title, description, ownerId, isPrivate, wordsCount)
-        VALUES (NULL, '${req.body.title}', '${req.body.description}', '${req.body.ownerId}', '${req.body.isPrivate}', 0)`,(err, result)=>{
+        connection.query(`INSERT INTO vocabulary (id, title, description, ownerId, ownerNickname, isPrivate, wordsCount)
+        VALUES (NULL, '${req.body.title}', '${req.body.description}', '${req.body.ownerId}', '${req.body.ownerNickname}', '${req.body.isPrivate}', 0)`,(err, result)=>{
             if(result.affectedRows){
                 res.send(createResponse(res, 200, "Voc was created with id = "+result.insertId, {id: result.insertId}));
                 return;
@@ -317,8 +330,10 @@ app.delete('/vocabulary/delete/:id', (req, res) => {
    
             connection.query(`DELETE FROM vocabulary WHERE id='${req.params.id}'`,(err1, result1)=>{
                 connection.query(`DELETE FROM words WHERE voc_id='${req.params.id}'`,(err3, result3)=>{
-                    res.send(createResponse(res, 200, "Voc was deleted with id = " + req.params.id));
-                    return;
+                    connection.query(`DELETE FROM ratings WHERE vocId='${req.params.id}'`,(err4, result4)=>{
+                        res.send(createResponse(res, 200, "Voc was deleted with id = " + req.params.id));
+                        return;
+                    })  
                 })  
             })
         });
@@ -350,7 +365,7 @@ app.put('/vocabulary/update/:id', (req, res) => {
 app.post('/words/create', (req, res) => {
     if(req.body.words){
         let wordsStr = "";
-        req.body.words.forEach(w => wordsStr += `(NULL, ${req.body.voc_id}, ${w.word_eng}, ${w.word_ru}),` )
+        req.body.words.forEach(w => wordsStr += `(NULL, '${req.body.voc_id}', '${w.word_eng}', '${w.word_ru}'),` )
         wordsStr = wordsStr.slice(0, -1);
         connection.query(`INSERT INTO words (id, voc_id, word_eng, word_ru)
         VALUES ${wordsStr}`,(err, result)=>{
@@ -395,7 +410,6 @@ app.put('/words/update/:id', (req, res) => {
 })
 
 app.delete('/words/delete/:id', (req, res) => {
-    console.log(req.params.id)
     connection.query(`DELETE FROM words WHERE id='${req.params.id}'`,(err, result)=>{
         if(err){
             res.send(createResponse(res, 500, "server error"));
@@ -409,6 +423,63 @@ app.delete('/words/delete/:id', (req, res) => {
         res.send(createResponse(res, 401, "Some error"));
     })
 })
+/* END */
+
+/* WORD API */
+
+app.get('/ratings/get/:userId', (req, res) => {
+    connection.query(`SELECT * FROM ratings WHERE userId = '${req.params.userId}'`,(err, result) => {
+        if(err) {
+            res.send(createResponse(res, 401, "Some error"));
+            return 
+        }
+
+        res.send(createResponse(res, 200, result ));
+    })
+})
+
+app.post('/ratings/create', (req, res) => {
+    connection.query(`SELECT * FROM ratings WHERE vocId = '${req.body.voc_id}' AND userId = '${req.body.userId}' `, (err0, result0) => {
+        if(!result0.length){
+            connection.query(`INSERT INTO ratings (id, vocId, userId, rate)
+                VALUES (NULL, '${req.body.voc_id}', '${req.body.userId}', '${req.body.rate}')`, (err, result) => {
+                if(result.affectedRows){
+                    connection.query(`SELECT rate FROM ratings WHERE vocId = '${req.body.voc_id}'`,(err1, result1)=> {
+                        let newRate = 0;
+                        result1.forEach(r => newRate += r.rate)
+                        newRate /= result1.length;
+                        connection.query(`UPDATE vocabulary SET rate='${newRate}' WHERE id='${req.body.voc_id}'`,(err2, result2) => {
+                            if(result2.affectedRows){
+                                res.send(createResponse(res, 201, null, newRate));
+                                return;
+                            }
+                            res.send(createResponse(res, 401, "Some error"));
+                        })
+                    })
+                }    
+            })
+        }else{
+            connection.query(`UPDATE ratings SET rate = '${req.body.rate}' WHERE vocId = '${req.body.voc_id}' AND userId = '${req.body.userId}'`, (err, result) => {
+                if(result.affectedRows){
+                    connection.query(`SELECT rate FROM ratings WHERE vocId = '${req.body.voc_id}'`,(err1, result1)=> {
+                        let newRate = 0;
+                        result1.forEach(r => newRate += r.rate)
+                        newRate /= result1.length;
+                        connection.query(`UPDATE vocabulary SET rate='${newRate}' WHERE id='${req.body.voc_id}'`,(err2, result2) => {
+                            if(result2.affectedRows){
+                                res.send(createResponse(res, 201, null, newRate));
+                                return;
+                            }
+                            res.send(createResponse(res, 401, "Some error"));
+                        })
+                    })
+                }    
+            })
+        }
+    })
+    
+})
+
 /* END */
 
 app.listen(4040, (err) => {

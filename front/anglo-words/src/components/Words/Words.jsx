@@ -25,8 +25,8 @@ const addWordForm = (props) => {
     }
 
     return (
-        <form onSubmit={props.handleSubmit} style={{display:'flex'}}>
-            <div>
+        <form onSubmit={props.handleSubmit} className={styles.addForm}>
+            <div className={styles.inputBlock}>
                 <Field 
                     label="Слово"
                     name="word_eng"
@@ -39,7 +39,7 @@ const addWordForm = (props) => {
                 />
             </div>
 
-            <div className={styles.wordRu}>
+            <div className={styles.inputBlock}>
                 <Field 
                     label="Перевод"
                     name="word_ru"
@@ -77,11 +77,11 @@ const Words = (props) => {
 
     const onAddWordSubmit = async (formData) => {
         await props.addNewWord(props.voc, formData.word_eng, formData.word_ru ? formData.word_ru : "" )
-        let page = 1;
-        if(props.voc.wordsCount === 0) page = 1;
-        else if(countOfWords % pageSize === 0) page = props.currentPage + 1;
+        let page = Math.ceil((props.voc.wordsCount + 1) / pageSize);
         props.getWordsByVocId(props.voc.id, page)
     }
+    
+    if(!props.voc) return <Preloader />
 
     return (
         <div>
@@ -94,6 +94,8 @@ const Words = (props) => {
                 </b>
             </Typography>
             {props.isAuth ?
+            props.voc.wordsCount >= props.maxWords ? <Typography style={{color:'red'}}>Достигнуто Максимальное количество слов! ({props.maxWords})</Typography> 
+            :
             <Accordion expanded={ accordionOpen } onChange={ onToggleAccordion }>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography>
@@ -106,10 +108,8 @@ const Words = (props) => {
             </Accordion>
             :""}
            
-           {
-            props.voc ? props.voc.wordsCount ?  
+           {props.voc.wordsCount ?  
                 <Pagination shape="rounded" count={ Math.ceil(countOfWords / pageSize) }  className={styles.paginator} color="primary"  page={ props.currentPage } onChange={ onPageChange } />
-            :   ""
             :   ""
            }
             

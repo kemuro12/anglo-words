@@ -19,6 +19,10 @@ export const authAPI = {
 
     logout(){
         return instance.delete(`/auth/logout`)    
+    },
+
+    registration(login, pass) {
+        return instance.post(`/auth/registration`, {login, pass})
     }
 }
 
@@ -57,8 +61,8 @@ export const vocsAPI = {
         return instance.get(`/vocabulary/words?${"voc_id=" + vocIds.join("&voc_id=")}`)
     },
 
-    createVoc(title, description, ownerId, isPrivate){
-        return instance.post(`/vocabulary/create`, {title, description, ownerId, isPrivate})
+    createVoc(title, description, ownerId, ownerNickname, isPrivate){
+        return instance.post(`/vocabulary/create`, {title, description, ownerId, ownerNickname, isPrivate})
     },
 
     deleteVoc(vocId){
@@ -85,5 +89,15 @@ export const wordsAPI = {
 
     deleteWord(wordId){
         return instance.delete(`/words/delete/${wordId}`) 
+    }
+}
+
+export const ratingsAPI = {
+    getRates(userId){
+        return instance.get(`/ratings/get/${userId}`)
+    },
+
+    createRate(voc_id, userId, rate){
+        return instance.post(`/ratings/create`, {voc_id, userId, rate})
     }
 }

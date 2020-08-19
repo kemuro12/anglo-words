@@ -70,6 +70,7 @@ const VocsList = (props) => {
             editMode={voc.id === editVoc ? true : false}
             key={voc.id}
             num={(props.currentPage - 1) * 10 + count}
+            maxWords={props.maxWords}
             handleOnSubmitEditForm={ handleOnSubmitEditForm() }
             handleListItemClick={ handleListItemClick(voc.id) }
             handleEditClick={ handleEditClick(voc.id) }

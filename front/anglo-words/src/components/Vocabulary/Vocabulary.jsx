@@ -76,7 +76,7 @@ const Vocabulary = (props) => {
     
     const onAddVocSubmit = async (formData) => {
         await props.addNewVoc(formData.title, formData.description, formData.isPrivate, props.user)
-        props.getVocsByUserId(props.user.userId, countOfVocs % pageSize === 0 ? props.currentPage + 1 : props.currentPage)
+        props.getVocsByUserId(props.user.userId, Math.ceil((countOfVocs + 1) / pageSize))
         setAccordionOpen(false);
     }
 

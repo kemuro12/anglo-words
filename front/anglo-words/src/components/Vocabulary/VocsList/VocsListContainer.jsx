@@ -15,6 +15,7 @@ const VocsListContainer = (props) => {
             getVocsByUserId={props.getVocsByUserId}
             currentPage={props.currentPage}
             toggleModal={props.toggleModal}
+            maxWords={props.maxWords}
         />
     )
 }
@@ -23,7 +24,8 @@ const mapStateToProps = (state) => {
     return {
         vocs: state.vocabulary.vocs,
         currentPage: state.vocabulary.currentPage,
-        userId: state.auth.userId
+        userId: state.auth.userId,
+        maxWords: state.vocabulary.maxWords
     }
 }
 

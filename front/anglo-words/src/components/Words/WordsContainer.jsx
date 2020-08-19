@@ -22,6 +22,7 @@ const WordsContainer = (props) => {
             getWordsByVocId={props.getWordsByVocId}
             currentPage={props.currentPage}
             pageOptions={props.pageOptions}
+            maxWords={props.maxWords}
         />
     )
 }
@@ -32,7 +33,8 @@ const mapStateToProps = (state) => {
         voc: state.words.voc,
         isLoading: state.preloader.isLoading,
         currentPage: state.words.currentPage,
-        pageOptions: state.words.pageOptions
+        pageOptions: state.words.pageOptions,
+        maxWords: state.vocabulary.maxWords
     }
 }
 

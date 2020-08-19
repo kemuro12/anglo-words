@@ -16,14 +16,14 @@ const TableResult = (props) => {
 
     return (
         <Grid container>
-            <Grid item xs={12} lg={10} className={styles.gameBlock}>
+            <Grid item xs={12} className={styles.gameBlock}>
                 <Button size="small" style={{color:'red'}} onClick={ props.onClickEndGame }>Вернуться</Button>
                 <div>
                     <h3>{ correctAnswers } / { props.words.length } ({ percent }%) - { resultWord }</h3>
                 </div>
                 
                 <TableContainer>
-                    <Table>
+                    <Table className={styles.table}>
                         <TableHead>
                             <TableRow>
                                 <TableCell>#</TableCell>
