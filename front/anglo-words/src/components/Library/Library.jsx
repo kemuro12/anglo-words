@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import Preloader from '../templates/Preloader/Preloader';
 
 const Library = (props) => {
-
+    
     const History = useHistory();
   
     const formatDate = (date) => {
@@ -55,14 +55,14 @@ const Library = (props) => {
             </Typography>
 
             <Typography className={styles.row}>
-                Автор: <b>{ voc.ownerNickname }</b>
+                Автор: <b>{ props.userId !== voc.ownerId ? voc.ownerNickname : "Вы" }</b>
             </Typography>
 
             <Typography className={styles.row}>
                 Рейтинг: <Rating className={styles.stars} value={voc.rate} precision={0.5} readOnly/>
             </Typography>
 
-            {props.isAuth ?
+            {props.isAuth && props.userId !== voc.ownerId ?
                 <Typography className={styles.row}>
                     Моя оценка: <Rating className={styles.stars} name={"rating_" + voc.id} value={ rates[voc.id] || 0 } precision={0.5} test={ voc.id } onChange={ onRateChange } />
                 </Typography>
@@ -73,7 +73,7 @@ const Library = (props) => {
                 <Button size="medium" variant="contained" className={styles.buttonLook} data-id={voc.id} onClick={ onClickOpen } >
                     Открыть
                 </Button>
-                {props.isAuth ? 
+                {props.isAuth && props.userId !== voc.ownerId ? 
                 <Button size="small" variant="contained" className={styles.buttonAdd} data-id={voc.id} onClick={ onClickAdd } >
                     Добавить
                 </Button>

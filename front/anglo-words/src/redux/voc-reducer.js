@@ -10,7 +10,7 @@ const SET_PAGE_OPTIONS = "voc/SET_PAGE_OPTIONS";
 let initialState = {
     vocs: [],
     currentPage: 1,
-    maxWords:15,
+    maxWords:50,
     pageOptions: {
         countOfVocs: 0,
         pageSize: 0

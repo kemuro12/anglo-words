@@ -7,9 +7,9 @@ import { getAllVocs, copyVoc, setRate, getRates } from '../../redux/library-redu
 const LibraryContainer = (props) => {
 
     useEffect(() => {
-        props.getAllVocs();
-        props.getRates(props.userId);
-    }, [props.allVocs.length])
+        if(!props.allVocs.length) props.getAllVocs();
+        if(!props.rates.length) props.getRates(props.userId);
+    }, [])
 
     return (
         <Library 

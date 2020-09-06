@@ -60,7 +60,7 @@ const AddWordReduxForm = reduxForm({
 })(addWordForm)
 
 const Words = (props) => {
-    
+
     const [accordionOpen, setAccordionOpen] = useState(false);
     const History = useHistory();
 
@@ -93,7 +93,7 @@ const Words = (props) => {
                     }
                 </b>
             </Typography>
-            {props.isAuth ?
+            {props.isAuth && props.userId === props.voc.ownerId ?
             props.voc.wordsCount >= props.maxWords ? <Typography style={{color:'red'}}>Достигнуто Максимальное количество слов! ({props.maxWords})</Typography> 
             :
             <Accordion expanded={ accordionOpen } onChange={ onToggleAccordion }>

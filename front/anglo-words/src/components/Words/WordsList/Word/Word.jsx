@@ -106,7 +106,7 @@ const Word = (props) => {
                             </Typography>
                         </Hidden>
                         
-                        {props.isAuth ? 
+                        {props.isAuth && props.isOwner ? 
                             <>
                                 <IconButton onClick={ props.handleEditClick }>
                                     <EditIcon style={{color:"rgb(255,152,0)"}}/>

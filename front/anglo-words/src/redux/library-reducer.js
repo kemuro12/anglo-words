@@ -85,6 +85,7 @@ export const getAllVocs = () => {
         if(response.data.statusCode === 200) {
             dispatch(setAllVocs(response.data.data.vocs))
         }
+        dispatch(toggleIsLoading())
     }
 }
 
@@ -111,6 +112,7 @@ export const copyVoc = (vocId, userId) => {
 
 export const getRates = (userId) => {
     return async (dispatch) => {
+        dispatch(toggleIsLoading())
         let response = await ratingsAPI.getRates(userId);
         if(response.data.statusCode === 200) {
             dispatch(setRates(response.data.message))

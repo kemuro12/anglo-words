@@ -15,6 +15,7 @@ const WordsListContainer = (props) => {
             currentPage={props.currentPage}
             getWordsByVocId={props.getWordsByVocId}
             isAuth={props.isAuth}
+            userId={props.userId}
         />
     )
 }
@@ -23,6 +24,7 @@ const mapStateToProps = (state) => {
     return {
         words: state.words.words,
         isAuth:state.auth.isAuth,
+        userId:state.auth.userId,
         currentPage: state.words.currentPage,
         voc: state.words.voc
     }

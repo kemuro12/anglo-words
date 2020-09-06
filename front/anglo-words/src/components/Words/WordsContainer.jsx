@@ -17,6 +17,7 @@ const WordsContainer = (props) => {
             isAuth={props.isAuth}
             addNewWord={props.addNewWord} 
             voc={props.voc}
+            userId={props.userId}
             urlVocId={props.match.params.vocId} 
             isLoading={props.isLoading} 
             getWordsByVocId={props.getWordsByVocId}
@@ -30,6 +31,7 @@ const WordsContainer = (props) => {
 const mapStateToProps = (state) => {
     return {
         isAuth: state.auth.isAuth,
+        userId: state.auth.userId,
         voc: state.words.voc,
         isLoading: state.preloader.isLoading,
         currentPage: state.words.currentPage,
